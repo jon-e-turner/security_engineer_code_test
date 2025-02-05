@@ -1,7 +1,9 @@
+using ConfigChecker.Models;
 using ConfigChecker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Scalar.AspNetCore;
+using System.Threading.Channels;
 
 namespace ConfigChecker
 {
@@ -20,6 +22,9 @@ namespace ConfigChecker
       builder.Services.AddSingleton<IConfigurationAnalyzer, ConfigurationAnalyzer>();
       builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 
+      // Use a channel for async communication between app sections.
+      builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
+
       var app = builder.Build();
 
       // Configure the HTTP request pipeline.
@@ -27,48 +32,53 @@ namespace ConfigChecker
 
       app.UseAntiforgery();
       app.UseAuthorization();
-      
-      if(app.Environment.IsDevelopment())
+
+      if (app.Environment.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
         app.MapScalarApiReference();
       }
 
+      // Routes
       _ = app.MapGet("/", () => Results.Redirect("/upload"));
 
       _ = app.MapGet("/upload", () => Results.Ok());
-      
-      _ = app.MapPost("/upload", async (IFormFile file) =>
+
+      _ = app.MapPost("/upload", async (IFormFile file, IFileUploadService uploadService, ChannelWriter<string> processingChannel) =>
       {
         string path = string.Empty;
         var reportId = Guid.NewGuid().ToString();
 
-        using (var scope = app.Services.CreateAsyncScope())
+        path = await uploadService.ReadFormFile(file);
+
+        if (path == string.Empty)
         {
-          var uploadService = scope.ServiceProvider.GetRequiredService<IFileUploadService>();
+          return Results.BadRequest("Unable to process provided file.");
+        }
 
-          path = await uploadService.ReadFormFile(file);
-
-          if (path == string.Empty)
+        while (await processingChannel.WaitToWriteAsync())
+        {
+          if (processingChannel.TryWrite(path))
           {
-            return Results.BadRequest();
+            return Results.Accepted(uri: $"/reports/{reportId}");
           }
         }
 
-        var configAnalyzer = app.Services.GetRequiredService<IConfigurationAnalyzer>();
-        await configAnalyzer.AnalyzeConfiguration(reportId, path);
-
-        return Results.Accepted(uri: $"/reports/{reportId}");
+        // Fell through, so an error occurred.
+        return Results.BadRequest();
       });
 
-      _ = app.MapGet("/reports/{reportId}", async (string reportId) => 
+      _ = app.MapGet("/reports/{reportId}", async (string reportId, IReportStore reportStore) =>
       {
-        using (var scope = app.Services.CreateAsyncScope())
+        // Validate the provided ID is a GUID.
+        if (!Guid.TryParse(reportId, out _))
         {
-          var reportContext = scope.ServiceProvider.GetRequiredService<IReportStore>();
+          return Results.BadRequest("Report ID was invalid");
         }
 
-        return Results.BadRequest();
+        var report = await reportStore.GetReport(reportId);
+
+        return Results.Ok(report);
       });
 
       app.Run();

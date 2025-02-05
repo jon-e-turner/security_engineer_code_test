@@ -17,3 +17,5 @@ and the project as defined does not require any of the features
 To ensure the application is adaptable as new requirements emerge, I will follow a simplified domain-driven design.
 The input data domain for this project is the ["Resource"](./Models/Resource.cs). The output data domain will is the
 ["Finding"](./Models/Finding.cs).
+
+Use channels to provide data flow between the file uploader and the configuration checker.
