@@ -14,4 +14,8 @@
     <None Include="C:\Users\z4ns4\source\security_engineer_code_test\ConfigChecker\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Scalar.AspNetCore" Version="2.0.11" />
+  </ItemGroup>
+
 </Project>
