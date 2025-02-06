@@ -5,7 +5,7 @@ namespace ConfigChecker.Services
 {
   internal interface IReportStore
   {
-    public IAsyncEnumerable<FindingsDto> GetReportAsync(string reportId);
+    public IAsyncEnumerable<FindingDto> GetReportAsync(string reportId);
 
     public ValueTask CreateReportAsync(List<Finding> findings);
 

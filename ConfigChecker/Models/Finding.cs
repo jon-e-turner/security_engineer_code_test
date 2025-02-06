@@ -23,6 +23,11 @@
     public string Description { get; private set; }
 
     /// <summary>
+    /// Recommended mitigation steps.
+    /// </summary>
+    public string Mitigation { get; private set; }
+
+    /// <summary>
     /// The severity of the weakness.
     /// </summary>
     public SeverityRating Severity { get; private set; }
@@ -39,16 +44,18 @@
       ResourceName = string.Empty;
       Name = string.Empty;
       Description = string.Empty;
+      Mitigation = string.Empty;
       Severity = SeverityRating.Invalid;
       CweId = string.Empty;
     }
 
-    private Finding(string reportId, string resourceName, string name, string description, SeverityRating severity, string cweId)
+    private Finding(string reportId, string resourceName, string name, string description, string mitigation, SeverityRating severity, string cweId)
     {
       ReportId = reportId;
       ResourceName = resourceName;
       Name = name;
       Description = description;
+      Mitigation = mitigation;
       Severity = severity;
       CweId = cweId;
     }
@@ -60,20 +67,21 @@
     /// <param name="resourceName">Name of the resource where the weakness was found.</param>
     /// <param name="name">Short-name for the class of weakness.</param>
     /// <param name="description">Description of the weakness.</param>
+    /// <param name="mitigation">Recommended mitigation steps.</param>
     /// <param name="severity">The severity of the weakness.</param>
     /// <param name="cweId">The Common Weakness Enumeration ID of the weakness.</param>
     /// <returns>A new <see cref="Finding"/> instance.</returns>
     /// <exception cref="AggregateException">Contains validation errors.</exception>
-    public static Finding Create(string reportId, string resourceName, string name, string description, string severity, string cweId)
+    public static Finding Create(string reportId, string resourceName, string name, string description, string mitigation, string severity, string cweId)
     {
-      ValidateInputs(reportId, resourceName, name, description, severity, cweId);
+      ValidateInputs(reportId, resourceName, name, description, mitigation, severity, cweId);
 
       var parsedSeverity = Enum.Parse<SeverityRating>(severity, ignoreCase: true);
       
-      return new Finding(reportId, resourceName, name, description, parsedSeverity, cweId);
+      return new Finding(reportId, resourceName, name, description, mitigation, parsedSeverity, cweId);
     }
 
-    private static void ValidateInputs(string reportId, string resourceName, string name, string description, string severity, string cweId)
+    private static void ValidateInputs(string reportId, string resourceName, string name, string description, string mitigation, string severity, string cweId)
     {
       List<Exception> exceptions = [];
 
@@ -95,6 +103,11 @@
       if (string.IsNullOrEmpty(description))
       {
         exceptions.Add(new ArgumentException("Description cannot be empty.", nameof(description)));
+      }
+
+      if (string.IsNullOrEmpty(mitigation))
+      {
+        exceptions.Add(new ArgumentException("Mitigation recommendataion cannot be empty.", nameof(mitigation)));
       }
 
       if (string.IsNullOrEmpty(severity) || !Enum.TryParse<SeverityRating>(severity, ignoreCase: true, out _))

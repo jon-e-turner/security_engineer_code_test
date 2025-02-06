@@ -25,6 +25,9 @@ namespace ConfigChecker.Persistance.Configurations
       builder.Property(f => f.Description)
         .IsRequired();
 
+      builder.Property(f => f.Mitigation)
+        .IsRequired();
+
       builder.Property(f => f.Severity)
         .IsRequired();
 

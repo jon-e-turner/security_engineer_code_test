@@ -7,7 +7,7 @@
 		- File upload service
 		- Configuration validation as background service
 		- Channels for communication to validation service
-		- EF Core + in-memory database for report storage
+		- EF Core + Sqllite database for report storage
 
 ## Design Decisions
 
@@ -28,7 +28,3 @@ Configuring entity-type relationships using the IEntityTypeConfiguration interfa
 remain clean and decoupled from the persistence implementation.
 
 ## Configuration Notes
-
-	- To persist the in-memory database between executions, set a value in the connection strings section
-	of [appSettings.json](./appSettings.json). If not provided, the application will create a new database
-	each time.

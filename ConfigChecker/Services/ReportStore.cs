@@ -33,14 +33,14 @@ namespace ConfigChecker.Services
       }
     }
 
-    public async IAsyncEnumerable<FindingsDto> GetReportAsync(string reportId)
+    public async IAsyncEnumerable<FindingDto> GetReportAsync(string reportId)
     {
       var findings = _dbContext.Findings
         .Where(f => f.ReportId.Equals(reportId, StringComparison.InvariantCultureIgnoreCase))
         .AsAsyncEnumerable();
 
       await foreach (var f in findings) {
-        yield return new FindingsDto(f.ResourceName, f.Name, f.Description, f.Severity.ToString(), f.CweId);
+        yield return new FindingDto(f.ResourceName, f.Name, f.Description, f.Mitigation, f.Severity.ToString(), f.CweId);
       }
     }
   }

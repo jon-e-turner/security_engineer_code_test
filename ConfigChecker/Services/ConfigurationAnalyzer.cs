@@ -10,14 +10,14 @@ namespace ConfigChecker.Services
 
     public async ValueTask AnalyzeConfigurationAsync(string reportId, string filePath)
     {
-      List<ResourceDto> resources = [];
+      List<ResourceDto> resourceRecords = [];
 
       using (var fileStream = File.OpenRead(filePath))
       {
-        resources = await JsonSerializer.DeserializeAsync<List<ResourceDto>>(fileStream) ?? [];
+        resourceRecords = await JsonSerializer.DeserializeAsync<List<ResourceDto>>(fileStream) ?? [];
       }
 
-      if (resources.Count == 0)
+      if (resourceRecords.Count == 0)
       {
         return;
       }

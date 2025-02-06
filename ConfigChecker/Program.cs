@@ -86,9 +86,9 @@ namespace ConfigChecker
           return Results.BadRequest("Report ID was invalid");
         }
 
-        List<FindingsDto> report = [];
+        List<FindingDto> report = [];
 
-        await foreach (FindingsDto f in reportStore.GetReportAsync(reportId))
+        await foreach (FindingDto f in reportStore.GetReportAsync(reportId))
         {
           report.Add(f);
         }
