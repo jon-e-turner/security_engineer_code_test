@@ -2,6 +2,6 @@
 {
   public interface IConfigurationAnalyzer
   {
-    public ValueTask AnalyzeConfiguration(string requestId, string filePath);
+    public ValueTask AnalyzeConfigurationAsync(string requestId, string filePath);
   }
 }

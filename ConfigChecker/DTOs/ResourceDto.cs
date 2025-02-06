@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ConfigChecker.DTOs
 {
-  public record Resource
+  public record ResourceDto
   {
     public required string Type { get; set; }
 

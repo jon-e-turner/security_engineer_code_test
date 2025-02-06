@@ -34,7 +34,7 @@ namespace ConfigChecker
       });
 
       // Use a channel for async communication between app sections.
-      builder.Services.AddSingleton(Channel.CreateUnbounded<ProcessingRequest>());
+      builder.Services.AddSingleton(Channel.CreateUnbounded<ProcessingRequestDto>());
 
       var app = builder.Build();
 
@@ -54,12 +54,12 @@ namespace ConfigChecker
 
       _ = app.MapGet("/upload", () => Results.Ok());
 
-      _ = app.MapPost("/upload", async (IFormFile file, IFileUploadService uploadService, [FromServices] ChannelWriter<ProcessingRequest> processingChannel) =>
+      _ = app.MapPost("/upload", async (IFormFile file, IFileUploadService uploadService, [FromServices] ChannelWriter<ProcessingRequestDto> processingChannel) =>
       {
         string path = string.Empty;
         var reportId = Guid.NewGuid().ToString();
 
-        path = await uploadService.ReadFormFile(file);
+        path = await uploadService.ReadFormFileAsync(file);
 
         if (path == string.Empty)
         {
@@ -68,7 +68,7 @@ namespace ConfigChecker
 
         while (await processingChannel.WaitToWriteAsync())
         {
-          if (processingChannel.TryWrite(new ProcessingRequest { Path = path, ReportId = reportId }))
+          if (processingChannel.TryWrite(new ProcessingRequestDto(path,reportId)))
           {
             return Results.Accepted(uri: $"/reports/{reportId}");
           }
@@ -86,7 +86,12 @@ namespace ConfigChecker
           return Results.BadRequest("Report ID was invalid");
         }
 
-        var report = await reportStore.GetReport(reportId);
+        List<FindingsDto> report = [];
+
+        await foreach (FindingsDto f in reportStore.GetReportAsync(reportId))
+        {
+          report.Add(f);
+        }
 
         if (report.Count > 0)
         {

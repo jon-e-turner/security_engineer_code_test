@@ -2,6 +2,6 @@
 {
   public interface IFileUploadService
   {
-    ValueTask<string> ReadFormFile(IFormFile formFile);
+    ValueTask<string> ReadFormFileAsync(IFormFile formFile);
   }
 }

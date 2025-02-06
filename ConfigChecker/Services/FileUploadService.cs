@@ -7,7 +7,7 @@ namespace ConfigChecker.Services
     private readonly long _maxFileSize = options.Value.MaxFileSize;
     private readonly string[] _allowedExtensions = options.Value.AllowedExtensions;
 
-    public async ValueTask<string> ReadFormFile(IFormFile formFile)
+    public async ValueTask<string> ReadFormFileAsync(IFormFile formFile)
     {
       if (!ValidateFormFile(formFile))
       {
