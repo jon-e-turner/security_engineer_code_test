@@ -2,12 +2,12 @@
 
 ## Technology Stack
 
-- ASP.Net 8.0
-	- Minimal API
-	- File upload service
-	- Configuration validation as background service
-	- Channels for communication to validation service
-	- EF Core + in-memory database for report storage
+	- ASP.Net 8.0
+		- Minimal API
+		- File upload service
+		- Configuration validation as background service
+		- Channels for communication to validation service
+		- EF Core + in-memory database for report storage
 
 ## Design Decisions
 
@@ -26,3 +26,9 @@ the API to respond to the user quickly and moves analyzing the configuration out
 
 Configuring entity-type relationships using the IEntityTypeConfiguration interface to ensure the domains
 remain clean and decoupled from the persistence implementation.
+
+## Configuration Notes
+
+	- To persist the in-memory database between executions, set a value in the connection strings section
+	of [appSettings.json](./appSettings.json). If not provided, the application will create a new database
+	each time.

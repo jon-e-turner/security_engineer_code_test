@@ -1,6 +1,8 @@
 using ConfigChecker.DTOs;
+using ConfigChecker.Persistance;
 using ConfigChecker.Services;
-using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Channels;
 
 namespace ConfigChecker
@@ -13,12 +15,23 @@ namespace ConfigChecker
 
       // Add services to the container.
       builder.Services.AddAuthorization();
+      builder.Services.AddAntiforgery();
 
       builder.Services.AddOptions<FileUploadServiceOptions>()
         .BindConfiguration(nameof(FileUploadServiceOptions));
 
-      builder.Services.AddSingleton<IConfigurationAnalyzer, ConfigurationAnalyzer>();
+      // Add worker services.
+      //builder.Services.AddSingleton<IConfigurationAnalyzer, ConfigurationAnalyzer>();
       builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+
+      // Add persistence via DbContext.
+      builder.Services.AddDbContext<FindingsDbContext>(options =>
+      {
+        var connectionString = builder.Configuration.GetConnectionString(nameof(FindingsDbContext))
+          ?? throw new ArgumentException("Connection string not set in appSettings.json.");
+
+        options.UseSqlite(connectionString);
+      });
 
       // Use a channel for async communication between app sections.
       builder.Services.AddSingleton(Channel.CreateUnbounded<ProcessingRequest>());
@@ -34,7 +47,6 @@ namespace ConfigChecker
       if (app.Environment.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
-        app.MapScalarApiReference();
       }
 
       // Routes
@@ -42,7 +54,7 @@ namespace ConfigChecker
 
       _ = app.MapGet("/upload", () => Results.Ok());
 
-      _ = app.MapPost("/upload", async (IFormFile file, IFileUploadService uploadService, ChannelWriter<ProcessingRequest> processingChannel) =>
+      _ = app.MapPost("/upload", async (IFormFile file, IFileUploadService uploadService, [FromServices] ChannelWriter<ProcessingRequest> processingChannel) =>
       {
         string path = string.Empty;
         var reportId = Guid.NewGuid().ToString();
@@ -66,7 +78,7 @@ namespace ConfigChecker
         return Results.BadRequest();
       });
 
-      _ = app.MapGet("/reports/{reportId}", async (string reportId, IReportStore reportStore) =>
+      _ = app.MapGet("/reports/{reportId}", async (string reportId, [FromServices] IReportStore reportStore) =>
       {
         // Validate the provided ID is a GUID.
         if (!Guid.TryParse(reportId, out _))

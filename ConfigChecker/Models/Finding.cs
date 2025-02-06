@@ -3,6 +3,11 @@
   public sealed class Finding : EntityBase
   {
     /// <summary>
+    /// The report this finding belongs to.
+    /// </summary>
+    public string ReportId { get; private set; }
+    
+    /// <summary>
     /// Name of the resource where the weakness was found.
     /// </summary>
     public string ResourceName { get; private set; }
@@ -30,6 +35,7 @@
 
     private Finding()
     {
+      ReportId = string.Empty;
       ResourceName = string.Empty;
       Name = string.Empty;
       Description = string.Empty;
@@ -37,8 +43,9 @@
       CweId = string.Empty;
     }
 
-    private Finding(string resourceName, string name, string description, SeverityRating severity, string cweId)
+    private Finding(string reportId, string resourceName, string name, string description, SeverityRating severity, string cweId)
     {
+      ReportId = reportId;
       ResourceName = resourceName;
       Name = name;
       Description = description;
@@ -49,6 +56,7 @@
     /// <summary>
     /// Validates the inputs and creates a new <see cref="Finding"/> instance
     /// </summary>
+    /// <param name="reportId">The report this finding belongs to.</param>
     /// <param name="resourceName">Name of the resource where the weakness was found.</param>
     /// <param name="name">Short-name for the class of weakness.</param>
     /// <param name="description">Description of the weakness.</param>
@@ -56,18 +64,23 @@
     /// <param name="cweId">The Common Weakness Enumeration ID of the weakness.</param>
     /// <returns>A new <see cref="Finding"/> instance.</returns>
     /// <exception cref="AggregateException">Contains validation errors.</exception>
-    public static Finding Create(string resourceName, string name, string description, string severity, string cweId)
+    public static Finding Create(string reportId, string resourceName, string name, string description, string severity, string cweId)
     {
-      ValidateInputs(resourceName, name, description, severity, cweId);
+      ValidateInputs(reportId, resourceName, name, description, severity, cweId);
 
       var parsedSeverity = Enum.Parse<SeverityRating>(severity, ignoreCase: true);
       
-      return new Finding(resourceName, name, description, parsedSeverity, cweId);
+      return new Finding(reportId, resourceName, name, description, parsedSeverity, cweId);
     }
 
-    private static void ValidateInputs(string resourceName, string name, string description, string severity, string cweId)
+    private static void ValidateInputs(string reportId, string resourceName, string name, string description, string severity, string cweId)
     {
       List<Exception> exceptions = [];
+
+      if (string.IsNullOrEmpty(reportId) || !Guid.TryParse(reportId, out _))
+      {
+        exceptions.Add(new ArgumentException("Report ID is not valid.", nameof(reportId)));
+      }
 
       if (string.IsNullOrWhiteSpace(resourceName))
       {
@@ -87,6 +100,11 @@
       if (string.IsNullOrEmpty(severity) || !Enum.TryParse<SeverityRating>(severity, ignoreCase: true, out _))
       {
         exceptions.Add(new ArgumentException("Cannot parse severity.", nameof(severity)));
+      }
+
+      if (string.IsNullOrEmpty(cweId))
+      {
+        exceptions.Add(new ArgumentException("CWE Id cannot be empty.", nameof(cweId)));
       }
 
       if (exceptions.Count > 0)
