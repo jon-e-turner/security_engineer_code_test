@@ -38,15 +38,16 @@ namespace ConfigChecker
 
       var app = builder.Build();
 
-      // Configure the HTTP request pipeline.
-      app.UseHttpsRedirection();
-
       app.UseAntiforgery();
       app.UseAuthorization();
 
       if (app.Environment.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
+      }
+      else
+      {
+        app.UseHttpsRedirection();
       }
 
       // Routes
