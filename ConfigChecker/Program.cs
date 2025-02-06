@@ -1,7 +1,5 @@
-using ConfigChecker.Models;
+using ConfigChecker.DTOs;
 using ConfigChecker.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Scalar.AspNetCore;
 using System.Threading.Channels;
 
@@ -23,7 +21,7 @@ namespace ConfigChecker
       builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 
       // Use a channel for async communication between app sections.
-      builder.Services.AddSingleton(Channel.CreateUnbounded<string>());
+      builder.Services.AddSingleton(Channel.CreateUnbounded<ProcessingRequest>());
 
       var app = builder.Build();
 
@@ -44,7 +42,7 @@ namespace ConfigChecker
 
       _ = app.MapGet("/upload", () => Results.Ok());
 
-      _ = app.MapPost("/upload", async (IFormFile file, IFileUploadService uploadService, ChannelWriter<string> processingChannel) =>
+      _ = app.MapPost("/upload", async (IFormFile file, IFileUploadService uploadService, ChannelWriter<ProcessingRequest> processingChannel) =>
       {
         string path = string.Empty;
         var reportId = Guid.NewGuid().ToString();
@@ -58,7 +56,7 @@ namespace ConfigChecker
 
         while (await processingChannel.WaitToWriteAsync())
         {
-          if (processingChannel.TryWrite(path))
+          if (processingChannel.TryWrite(new ProcessingRequest { Path = path, ReportId = reportId }))
           {
             return Results.Accepted(uri: $"/reports/{reportId}");
           }
@@ -78,7 +76,12 @@ namespace ConfigChecker
 
         var report = await reportStore.GetReport(reportId);
 
-        return Results.Ok(report);
+        if (report.Count > 0)
+        {
+          return Results.Ok(report);
+        }
+
+        return Results.NoContent();
       });
 
       app.Run();

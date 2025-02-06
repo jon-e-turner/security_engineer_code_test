@@ -5,8 +5,9 @@
 - ASP.Net 8.0
 	- Minimal API
 	- File upload service
-	- Configuration validation service
-
+	- Configuration validation as background service
+	- Channels for communication to validation service
+	- EF Core + in-memory database for report storage
 
 ## Design Decisions
 
@@ -15,7 +16,13 @@ and the project as defined does not require any of the features
 [minimal APIs lack](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/apis?view=aspnetcore-8.0).
 
 To ensure the application is adaptable as new requirements emerge, I will follow a simplified domain-driven design.
-The input data domain for this project is the ["Resource"](./Models/Resource.cs). The output data domain will is the
+As we only want to persist the reports, and not the raw configuration data, the data domain is the
 ["Finding"](./Models/Finding.cs).
 
-Use channels to provide data flow between the file uploader and the configuration checker.
+Simple data-transfer objects are used for user interactions.
+
+Channels are used to provide data flow between the file uploader and the configuration checker. This allows
+the API to respond to the user quickly and moves analyzing the configuration out of the hot-path.
+
+Configuring entity-type relationships using the IEntityTypeConfiguration interface to ensure the domains
+remain clean and decoupled from the persistence implementation.
