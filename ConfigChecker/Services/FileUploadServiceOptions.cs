@@ -4,6 +4,6 @@
   {
     public long MaxFileSize = 16777216; // 16Mb 
 
-    public string[] AllowedExtensions = { "txt", "json" };
+    public string[] AllowedExtensions = [];
   }
 }
