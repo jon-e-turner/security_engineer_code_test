@@ -12,10 +12,6 @@ namespace ConfigChecker.Endpoints
   {
     public static void MapConfigCheckerEndpoints(this IEndpointRouteBuilder endpointRouteBuilder)
     {
-      _ = endpointRouteBuilder.MapGet("/", () => Results.Redirect("/upload"));
-
-      _ = endpointRouteBuilder.MapGet("/upload", () => Results.Ok());
-
       _ = endpointRouteBuilder.MapPost("/upload", async (IFormFile file, IFileUploadService uploadService, [FromServices] ChannelWriter<ProcessingRequestDto> processingChannel) =>
       {
         string path = string.Empty;

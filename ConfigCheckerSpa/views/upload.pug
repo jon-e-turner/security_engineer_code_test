@@ -1,0 +1,11 @@
+extends index
+
+block upload
+	form(method="post", encoding="multipart/form-data")
+		fieldset
+			p
+				label(for="file") File:
+					input(type="file", name="file", id="file", accept=".txt,.json,text/json" required)
+
+      p
+        input(type="submit", value="Upload")

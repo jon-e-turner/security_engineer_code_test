@@ -1,0 +1,5 @@
+extends index
+
+block reports
+  each repId in reportIds
+    a(href=`http://${dal-uri}/${reports-endpoint}/${repId}`) #{repId}
