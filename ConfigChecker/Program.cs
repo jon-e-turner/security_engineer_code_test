@@ -16,7 +16,6 @@ namespace ConfigChecker
       // Add services to the container.
       builder.Services.AddAuthorization();
       builder.Services.AddAntiforgery();
-      builder.Services.AddRazorPages();
 
       builder.Services.AddOptions<FileUploadServiceOptions>()
         .BindConfiguration(nameof(FileUploadServiceOptions));
@@ -53,7 +52,6 @@ namespace ConfigChecker
 
       // Routes
       app.MapConfigCheckerEndpoints();
-      app.MapRazorPages();
 
       app.Run();
     }
