@@ -1,9 +1,29 @@
 extends layout
 
+block scripts
+  script(src='/scripts/FormValidation.js')
+
 block content
   h1= title
   p Welcome to #{title}
 
 block upload
+  form(method="post", enctype="multipart/form-data", onsubmit=`ValidateFormData(this, ${dalUri}, ${uploadEndpoint});return false`)
+    fieldset
+      p
+        label(for="file") File:
+        input(type="file", name="file", id="file", accept=".txt,.json,text/json" required)
+
+      p
+        input(type="submit", value="Upload")
+
+      p
+        output(name="result")
 
 block reports
+//-   if reportIds.length
+//-     each repId in reportIds
+//-       div
+//-         a(href=`http://${dalUri}/${reportsEndpoint}/${repId}`) #{repId}
+//-     else
+//-       div
