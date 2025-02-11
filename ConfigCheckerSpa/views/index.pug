@@ -1,14 +1,18 @@
 extends layout
 
-block scripts
-  script(src='/scripts/FormValidation.js')
+block append scripts
+  script(src='/scripts/FormHelpers.js')
 
 block content
   h1= title
   p Welcome to #{title}
 
 block upload
-  form(method="post", enctype="multipart/form-data", onsubmit=`ValidateFormData(this, ${dalUri}, ${uploadEndpoint});return false`)
+  form(
+    id="uploadForm",
+    method="post", 
+    enctype="multipart/form-data"
+  )
     fieldset
       p
         label(for="file") File:

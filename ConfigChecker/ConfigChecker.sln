@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigChecker", "ConfigChecker.csproj", "{D4AD4010-7CEF-4E9E-9F20-51F2AA754AB5}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "ConfigCheckerSpa", "..\ConfigCheckerSpa\ConfigCheckerSpa.esproj", "{1FEADB58-1D7F-4855-876C-FE48B5B222AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D4AD4010-7CEF-4E9E-9F20-51F2AA754AB5} = {D4AD4010-7CEF-4E9E-9F20-51F2AA754AB5}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
