@@ -45,7 +45,9 @@ remain clean and decoupled from the persistence implementation.
     > dotnet ef database update
     ```
 
-- Launch the application, then use a browser to open URI from the debug output. In this example, that is `http://localhost:5262`.
+- Launch the application, then use a browser to open URI from the debug output. In this example,
+that is `http://localhost:5262`. If you are re-directed from "/" to "/upload" the service is
+connected.
 
     ``` shell
     > dotnet run

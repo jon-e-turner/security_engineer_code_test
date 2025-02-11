@@ -2,17 +2,27 @@ extends layout
 
 block append scripts
   script(src='/scripts/FormHelpers.js')
+  script.
+    // Overload form submit event handler.
+    window.onload = function() {
+      const form = document.querySelector("#uploadForm");
+      form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const resultElement = form.elements.namedItem("result");
+        if (ValidateFormData(formData)) {
+          await SendFormData(formData, resultElement, "#{dalUri}", "#{uploadEndpoint}");
+        }
+      },
+      false);
+    }
 
 block content
   h1= title
   p Welcome to #{title}
 
 block upload
-  form(
-    id="uploadForm",
-    method="post", 
-    enctype="multipart/form-data"
-  )
+  form#uploadForm(method="post")
     fieldset
       p
         label(for="file") File:
