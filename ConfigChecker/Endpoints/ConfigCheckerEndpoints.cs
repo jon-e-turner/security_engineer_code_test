@@ -1,5 +1,5 @@
-﻿using ConfigChecker.DTOs;
-using ConfigChecker.Services;
+﻿using ConfigChecker.Abstractions;
+using ConfigChecker.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Channels;
 

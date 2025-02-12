@@ -1,4 +1,5 @@
-﻿using ConfigChecker.DTOs;
+﻿using ConfigChecker.Abstractions;
+using ConfigChecker.DTOs;
 using ConfigChecker.Models;
 using ConfigChecker.Persistance;
 using Microsoft.EntityFrameworkCore;

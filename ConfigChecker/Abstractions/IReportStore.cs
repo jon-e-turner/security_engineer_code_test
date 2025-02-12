@@ -1,7 +1,7 @@
 ﻿using ConfigChecker.DTOs;
 using ConfigChecker.Models;
 
-namespace ConfigChecker.Services
+namespace ConfigChecker.Abstractions
 {
   internal interface IReportStore
   {

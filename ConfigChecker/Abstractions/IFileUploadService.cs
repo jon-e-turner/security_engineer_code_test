@@ -1,4 +1,4 @@
-﻿namespace ConfigChecker.Services
+﻿namespace ConfigChecker.Abstractions
 {
   public interface IFileUploadService
   {

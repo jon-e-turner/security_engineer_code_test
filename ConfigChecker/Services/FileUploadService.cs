@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using ConfigChecker.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace ConfigChecker.Services
 {
