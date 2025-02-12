@@ -1,58 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace ConfigChecker
 {
   public static class FormFileUtilities
   {
-    public static async Task<IFormFile> ValidateFormFile(IFormFile? formFile, long maxFileSize, string[] allowedFileExtensions)
+    public static async Task<bool> TryValidateFormFile(this IFormFile formFile, long maxFileSize, string[] allowedFileExtensions)
     {
-      var modelSate = new ModelStateDictionary();
+      List<Exception> aggregateExceptions = [];
 
-      var temp = await ValidateFormFile(formFile, modelSate, maxFileSize, allowedFileExtensions);
-
-      if (!modelSate.IsValid || temp is null)
-      {
-        List<Exception> aggregateExceptions = [];
-
-        foreach (var error in modelSate.Values.SelectMany(v => v.Errors))
-        {
-          aggregateExceptions.Add(new ArgumentException(error.ErrorMessage));
-        }
-
-        throw new AggregateException(aggregateExceptions);
-      }
-
-      return temp;
-    }
-
-    public static async Task<IFormFile?> ValidateFormFile(IFormFile? formFile, ModelStateDictionary modelState,
-                                                          long maxFileSize, string[] allowedFileExtensions)
-    {
       // Check the file length. This check doesn't catch files that only have 
       // a BOM as their content.
-      if (formFile is null || formFile.Length == 0)
+      if (formFile is null)
       {
-        modelState.AddModelError(formFile?.Name ?? @"nullCheck", @"The provided file is empty.");
+        aggregateExceptions.Add(new ArgumentNullException(nameof(formFile)));
+      }
 
-        return null;
+      if (formFile.Length == 0)
+      {
+        aggregateExceptions.Add(new ArgumentException(@"File submitted cannot be empty.", nameof(formFile)));
       }
 
       if (formFile.Length > maxFileSize)
       {
         var megabyteMaxFileSize = maxFileSize / 1048576;
-        modelState.AddModelError(formFile.Name, $"File provided exceeds {megabyteMaxFileSize:N1} MB.");
-
-        return null;
+        aggregateExceptions.Add(new ArgumentException($"File provided exceeds {megabyteMaxFileSize:N1} MB.", nameof(formFile)));
       }
 
       var trustedFileNameForDisplay = WebUtility.HtmlEncode(formFile.FileName);
 
       if (string.IsNullOrWhiteSpace(trustedFileNameForDisplay))
       {
-        modelState.AddModelError(formFile.Name, @"Uploaded file has an invalid or null name");
-
-        return null;
+        aggregateExceptions.Add(new ArgumentException(@"Uploaded file has an invalid or null name", nameof(formFile)));
       }
 
       if (allowedFileExtensions.Length > 0)
@@ -61,34 +40,40 @@ namespace ConfigChecker
 
         if (!allowedFileExtensions.Contains(fileExt, StringComparer.OrdinalIgnoreCase))
         {
-          modelState.AddModelError(formFile.Name, @"File extension is not valid.");
-
-          return null;
+          aggregateExceptions.Add(new ArgumentException(@"File extension is not valid.", nameof(formFile)));
         }
       }
 
-      try
+      if (aggregateExceptions.Count > 0)
       {
-        using (var fileStream = formFile.OpenReadStream())
+        throw new AggregateException(aggregateExceptions);
+      }
+      else
+      {
+        try
         {
-          var buffer = new Byte[8];
-
-          // This ensures the file has at least 8 bytes of data (i.e. more than a BOM).
-          // It's more expensive, so we only want to do it on files that are about to be saved.
-          if (await fileStream.ReadAsync(buffer.AsMemory(0, 8)) != 8)
+          using (var fileStream = formFile.OpenReadStream())
           {
-            modelState.AddModelError(formFile.Name, @"The provided file is empty");
+            var buffer = new Byte[8];
 
-            return null;
+            // This ensures the file has at least 8 bytes of data (i.e. more than a BOM).
+            // It's more expensive, so we only want to do it on files that are about to be saved.
+            if (await fileStream.ReadAsync(buffer.AsMemory(0, 8)) != 8)
+            {
+              throw new ArgumentException(@"The provided file is empty", nameof(formFile));
+            }
           }
         }
-      }
-      catch (Exception ex)
-      {
-        modelState.AddModelError(formFile.Name, ex.ToString());
+        catch (Exception ex)
+        {
+          // This is usually an anti-patern, but by wrapping the exception in an outer
+          // AggregateException, I maintain the original call stack while also being
+          // consistent about what this method throws.
+          throw new AggregateException(ex);
+        }
       }
 
-      return formFile;
+      return true;
     }
   }
 }

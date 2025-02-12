@@ -10,16 +10,14 @@ namespace ConfigChecker.Services
 
         public async ValueTask<string> ReadFormFileAsync(IFormFile formFile)
         {
-            var checkedFile = await FormFileUtilities.ValidateFormFile(formFile, _maxFileSize, _allowedExtensions);
-
-            if (checkedFile is null)
+            if (!await formFile.TryValidateFormFile(_maxFileSize, _allowedExtensions))
             {
                 return string.Empty;
             }
 
             var safePath = Path.GetTempFileName();
             using var stream = File.Create(safePath);
-            await checkedFile.CopyToAsync(stream);
+            await formFile.CopyToAsync(stream);
 
             return safePath;
         }
