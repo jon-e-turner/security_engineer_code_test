@@ -1,4 +1,6 @@
-﻿namespace ConfigChecker.Models
+﻿using ConfigChecker.DTOs;
+
+namespace ConfigChecker.Models
 {
   public sealed class Finding : EntityBase
   {
@@ -61,7 +63,7 @@
     }
 
     /// <summary>
-    /// Validates the inputs and creates a new <see cref="Finding"/> instance
+    /// Validates the inputs and creates a new <see cref="Finding"/> instance.
     /// </summary>
     /// <param name="reportId">The report this finding belongs to.</param>
     /// <param name="resourceName">Name of the resource where the weakness was found.</param>
@@ -79,6 +81,24 @@
       var parsedSeverity = Enum.Parse<SeverityRating>(severity, ignoreCase: true);
       
       return new Finding(reportId, resourceName, name, description, mitigation, parsedSeverity, cweId);
+    }
+
+    /// <summary>
+    /// Validates the inputs and creates a new <see cref="Finding"/> instance.
+    /// </summary>
+    /// <param name="reportId">The report this finding belongs to.</param>
+    /// <param name="findingDto">The DTO describing the finding.</param>
+    /// <returns>A new <see cref="Finding"/> instance.</returns>
+    /// <exception cref="AggregateException">Contains validation errors.</exception>
+    public static Finding Create(string reportId, FindingDto findingDto)
+    {
+      return Finding.Create(reportId,
+                            findingDto.ResourceName,
+                            findingDto.Name,
+                            findingDto.Description,
+                            findingDto.Mitigation,
+                            findingDto.Severity,
+                            findingDto.CweId);
     }
 
     private static void ValidateInputs(string reportId, string resourceName, string name, string description, string mitigation, string severity, string cweId)

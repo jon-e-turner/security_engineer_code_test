@@ -18,13 +18,6 @@ namespace ConfigChecker
       builder.Services.AddAuthorization();
       builder.Services.AddAntiforgery();
 
-      builder.Services.AddOptions<FileUploadServiceOptions>()
-        .BindConfiguration(nameof(FileUploadServiceOptions));
-
-      // Add worker services.
-      //builder.Services.AddSingleton<IConfigurationAnalyzer, ConfigurationAnalyzer>();
-      builder.Services.AddScoped<IFileUploadService, FileUploadService>();
-
       // Add persistence via DbContext.
       builder.Services.AddDbContext<FindingsDbContext>(options =>
       {
@@ -33,6 +26,15 @@ namespace ConfigChecker
 
         options.UseSqlite(connectionString);
       });
+
+      // Configure services.
+      builder.Services.AddOptions<FileUploadServiceOptions>()
+        .BindConfiguration(nameof(FileUploadServiceOptions));
+
+      // Add worker services.
+      builder.Services.AddHostedService<ConfigurationAnalyzer>();
+      builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+      builder.Services.AddScoped<IReportStore, ReportStore>();
 
       // Use a channel for async communication between app sections.
       builder.Services.AddSingleton(Channel.CreateUnbounded<ProcessingRequestDto>());

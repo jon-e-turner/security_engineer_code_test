@@ -7,7 +7,7 @@ namespace ConfigChecker.Abstractions
   {
     public IAsyncEnumerable<FindingDto> GetReportAsync(string reportId);
 
-    public ValueTask CreateReportAsync(List<Finding> findings);
+    public ValueTask AppendToReportAsync(List<Finding> findings);
 
     public ValueTask DeleteReportAsync(string reportId);
   }

@@ -15,7 +15,7 @@ namespace ConfigChecker.Services
       _dbContext = dbContext;
     }
 
-    public async ValueTask CreateReportAsync(List<Finding> findings)
+    public async ValueTask AppendToReportAsync(List<Finding> findings)
     {
       await _dbContext.AddRangeAsync(findings);
       await _dbContext.SaveChangesAsync();

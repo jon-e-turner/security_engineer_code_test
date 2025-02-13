@@ -9,9 +9,10 @@ namespace ConfigChecker.DTOs
 
     public required string Name { get; set; }
 
+    [JsonPropertyName("azure_specific")]
     public required IDictionary<string, string> AzureSpecific { get; set; }
 
     [JsonExtensionData]
-    public IDictionary<string, JsonElement>? SecuritySettings { get; private set; }
+    public IDictionary<string, JsonElement>? SecuritySettings { get; set; }
   }
 }
