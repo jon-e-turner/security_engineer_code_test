@@ -41,7 +41,7 @@ namespace ConfigChecker.Services
         .AsAsyncEnumerable();
 
       await foreach (var f in findings) {
-        yield return new FindingDto(f.ResourceName, f.Name, f.Description, f.Mitigation, f.Severity.ToString(), f.CweId);
+        yield return new FindingDto(f.ResourceName, f.Name, f.Description, f.Mitigation, f.Severity, f.CweId);
       }
     }
   }

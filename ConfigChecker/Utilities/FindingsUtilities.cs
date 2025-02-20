@@ -5,13 +5,13 @@ namespace ConfigChecker.Utilities
 {
   public static class FindingsUtilities
   {
-    public static async IAsyncEnumerable<FindingDto> GetOpenPortFindings(ResourceDto res, JsonElement portJson)
+    public static async IAsyncEnumerable<FindingDto> GetOpenPortFindings(this ResourceDto res, JsonElement portJson)
     {
-      int[] ports = [];
+      int[] ports;
 
       try
       {
-        ports = portJson.Deserialize<int[]>(JsonSerializerOptions.Default) ?? [];
+        ports = portJson.Deserialize<int[]>(JsonSerializerOptions.Web) ?? [];
       }
       catch (Exception ex) when
         (ex is JsonException || ex is NotSupportedException)
@@ -26,9 +26,11 @@ namespace ConfigChecker.Utilities
       }
     }
 
-    private static IEnumerable<FindingDto> GetOpenPortFindings(ResourceDto res, int[] ports)
+    private static IEnumerable<FindingDto> GetOpenPortFindings(this ResourceDto res, int[] ports, int[]? allowedPorts = null)
     {
-      foreach (var port in ports)
+      var portsToCheck = ports.Except(allowedPorts ?? []);
+
+      foreach (var port in portsToCheck)
       {
         var finding = port switch
         {

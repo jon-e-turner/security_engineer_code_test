@@ -86,13 +86,20 @@ namespace ConfigChecker.Services
       ResourceDto res, 
       [EnumeratorCancellation] CancellationToken cancellation)
     {
-      if (res is not null && res.Type.Equals("database") && res.SecuritySettings is not null)
+      while (!cancellation.IsCancellationRequested)
       {
-        if (res.SecuritySettings.TryGetValue(@"open_ports", out var portJson))
+        if (res is not null && res.Type.Equals("database") && res.SecuritySettings is not null)
         {
-          await foreach (var f in FindingsUtilities.GetOpenPortFindings(res, portJson))
+          if (res.SecuritySettings.TryGetValue(@"open_ports", out var portJson))
           {
-            yield return f;
+            await foreach (var f in res.GetOpenPortFindings(portJson))
+            {
+              yield return f;
+            }
+          }
+          if (res.SecuritySettings.TryGetValue(@"password", out var pwdJson))
+          {
+
           }
         }
       }

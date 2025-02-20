@@ -1,4 +1,4 @@
-﻿using ConfigChecker.DTOs;
+﻿using ConfigChecker.Dtos;
 
 namespace ConfigChecker.Models
 {
@@ -17,7 +17,7 @@ namespace ConfigChecker.Models
     /// <summary>
     /// Short-name for the class of weakness.
     /// </summary>
-    public string Name { get; private set; }
+    public FindingName Name { get; private set; }
 
     /// <summary>
     /// Description of the weakness.
@@ -32,7 +32,7 @@ namespace ConfigChecker.Models
     /// <summary>
     /// The severity of the weakness.
     /// </summary>
-    public SeverityRating Severity { get; private set; }
+    public FindingSeverity Severity { get; private set; }
 
     /// <summary>
     /// The Common Weakness Enumeration ID of the weakness.
@@ -44,14 +44,14 @@ namespace ConfigChecker.Models
     {
       ReportId = string.Empty;
       ResourceName = string.Empty;
-      Name = string.Empty;
+      Name = FindingName.Invalid;
       Description = string.Empty;
       Mitigation = string.Empty;
-      Severity = SeverityRating.Invalid;
+      Severity = FindingSeverity.Invalid;
       CweId = string.Empty;
     }
 
-    private Finding(string reportId, string resourceName, string name, string description, string mitigation, SeverityRating severity, string cweId)
+    private Finding(string reportId, string resourceName, FindingName name, string description, string mitigation, FindingSeverity severity, string cweId)
     {
       ReportId = reportId;
       ResourceName = resourceName;
@@ -74,13 +74,11 @@ namespace ConfigChecker.Models
     /// <param name="cweId">The Common Weakness Enumeration ID of the weakness.</param>
     /// <returns>A new <see cref="Finding"/> instance.</returns>
     /// <exception cref="AggregateException">Contains validation errors.</exception>
-    public static Finding Create(string reportId, string resourceName, string name, string description, string mitigation, string severity, string cweId)
+    public static Finding Create(string reportId, string resourceName, FindingName name, string description, string mitigation, FindingSeverity severity, string cweId)
     {
       ValidateInputs(reportId, resourceName, name, description, mitigation, severity, cweId);
 
-      var parsedSeverity = Enum.Parse<SeverityRating>(severity, ignoreCase: true);
-      
-      return new Finding(reportId, resourceName, name, description, mitigation, parsedSeverity, cweId);
+      return new Finding(reportId, resourceName, name, description, mitigation, severity, cweId);
     }
 
     /// <summary>
@@ -101,7 +99,7 @@ namespace ConfigChecker.Models
                             findingDto.CweId);
     }
 
-    private static void ValidateInputs(string reportId, string resourceName, string name, string description, string mitigation, string severity, string cweId)
+    private static void ValidateInputs(string reportId, string resourceName, FindingName name, string description, string mitigation, FindingSeverity severity, string cweId)
     {
       List<Exception> exceptions = [];
 
@@ -115,9 +113,9 @@ namespace ConfigChecker.Models
         exceptions.Add(new ArgumentException("Resource name cannot be empty.", nameof(resourceName)));
       }
 
-      if (string.IsNullOrWhiteSpace(name))
+      if (name == FindingName.Invalid)
       {
-        exceptions.Add(new ArgumentException("Name cannot be empty.", nameof(name)));
+        exceptions.Add(new ArgumentException("Cannot parse finding name.", nameof(name)));
       }
 
       if (string.IsNullOrEmpty(description))
@@ -130,7 +128,7 @@ namespace ConfigChecker.Models
         exceptions.Add(new ArgumentException("Mitigation recommendataion cannot be empty.", nameof(mitigation)));
       }
 
-      if (string.IsNullOrEmpty(severity) || !Enum.TryParse<SeverityRating>(severity, ignoreCase: true, out _))
+      if (severity == FindingSeverity.Invalid)
       {
         exceptions.Add(new ArgumentException("Cannot parse severity.", nameof(severity)));
       }
@@ -144,19 +142,6 @@ namespace ConfigChecker.Models
       {
         throw new AggregateException(exceptions);
       }
-    }
-
-    /// <summary>
-    /// Standardized severity ratings.
-    /// </summary>
-    public enum SeverityRating
-    {
-      Invalid = 0,
-      Informational,
-      Low,
-      Medium,
-      High,
-      Critical
     }
   }
 }

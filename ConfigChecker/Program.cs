@@ -4,6 +4,8 @@ using ConfigChecker.Endpoints;
 using ConfigChecker.Persistance;
 using ConfigChecker.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Channels;
 
 namespace ConfigChecker
@@ -27,6 +29,20 @@ namespace ConfigChecker
         options.UseSqlite(connectionString);
       });
 
+      // Configure JSON Serializer options.
+      builder.Services.Configure<JsonSerializerOptions>(options => 
+      {
+        options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+        options.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;
+        options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower));
+        options.WriteIndented = true;
+      });
+
+      // Use a channel for async communication between app sections.
+      builder.Services.AddSingleton(Channel.CreateUnbounded<ProcessingRequestDto>());
+      builder.Services.AddSingleton(svc => svc.GetRequiredService<Channel<ProcessingRequestDto>>().Reader);
+      builder.Services.AddSingleton(svc => svc.GetRequiredService<Channel<ProcessingRequestDto>>().Writer);
+
       // Configure services.
       builder.Services.AddOptions<FileUploadServiceOptions>()
         .BindConfiguration(nameof(FileUploadServiceOptions));
@@ -35,9 +51,6 @@ namespace ConfigChecker
       builder.Services.AddHostedService<ConfigurationAnalyzer>();
       builder.Services.AddScoped<IFileUploadService, FileUploadService>();
       builder.Services.AddScoped<IReportStore, ReportStore>();
-
-      // Use a channel for async communication between app sections.
-      builder.Services.AddSingleton(Channel.CreateUnbounded<ProcessingRequestDto>());
 
       var app = builder.Build();
 

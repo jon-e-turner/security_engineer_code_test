@@ -1,11 +1,11 @@
-using ConfigChecker.DTOs;
+using ConfigChecker.Dtos;
 using ConfigChecker.Models;
 using System.Text.Json;
 
 namespace ConfigCheckerTests.Dtos;
 
 [TestClass]
-public class ResourceDtoExtensionsTests
+public class FindingsFactoryTests
 {
     private readonly ResourceDto? testResource = JsonSerializer.Deserialize<ResourceDto>("""
         {
@@ -33,10 +33,10 @@ public class ResourceDtoExtensionsTests
 
             Assert.IsNotNull(finding);
             Assert.AreEqual(testResource.Name, finding.ResourceName);
-            Assert.AreEqual("OpenPort", finding.Name);
+            Assert.AreEqual(FindingName.OpenPort, finding.Name);
             Assert.Contains("Port 80 ", finding.Description);
             Assert.Contains(" network groups ", finding.Mitigation);
-            Assert.AreEqual(Finding.SeverityRating.High.ToString(), finding.Severity);
+            Assert.AreEqual(FindingSeverity.High, finding.Severity);
             Assert.AreEqual("862", finding.CweId);
         }
         else

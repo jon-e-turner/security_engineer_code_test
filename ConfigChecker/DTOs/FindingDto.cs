@@ -2,10 +2,10 @@
 {
   public record FindingDto(
     string ResourceName,
-    string Name,
+    FindingName Name,
     string Description,
     string Mitigation,
-    string Severity,
+    FindingSeverity Severity,
     string CweId
   );
 }
