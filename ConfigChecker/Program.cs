@@ -30,7 +30,7 @@ namespace ConfigChecker
       });
 
       // Configure JSON Serializer options.
-      builder.Services.Configure<JsonSerializerOptions>(options => 
+      builder.Services.Configure<JsonSerializerOptions>(options =>
       {
         options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
         options.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;

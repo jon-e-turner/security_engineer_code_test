@@ -10,8 +10,8 @@ namespace ConfigChecker.Services
   {
     private readonly FindingsDbContext _dbContext;
 
-    public ReportStore(FindingsDbContext dbContext) 
-    { 
+    public ReportStore(FindingsDbContext dbContext)
+    {
       _dbContext = dbContext;
     }
 
@@ -40,7 +40,8 @@ namespace ConfigChecker.Services
         .Where(f => f.ReportId.Equals(reportId, StringComparison.InvariantCultureIgnoreCase))
         .AsAsyncEnumerable();
 
-      await foreach (var f in findings) {
+      await foreach (var f in findings)
+      {
         yield return new FindingDto(f.ResourceName, f.Name, f.Description, f.Mitigation, f.Severity, f.CweId);
       }
     }

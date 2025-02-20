@@ -4,26 +4,26 @@
 
 namespace ConfigChecker.Migrations
 {
+  /// <inheritdoc />
+  public partial class AddMitigationField : Migration
+  {
     /// <inheritdoc />
-    public partial class AddMitigationField : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.AddColumn<string>(
-                name: "Mitigation",
-                table: "Findings",
-                type: "TEXT",
-                nullable: false,
-                defaultValue: "");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "Mitigation",
-                table: "Findings");
-        }
+      migrationBuilder.AddColumn<string>(
+          name: "Mitigation",
+          table: "Findings",
+          type: "TEXT",
+          nullable: false,
+          defaultValue: "");
     }
+
+    /// <inheritdoc />
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+      migrationBuilder.DropColumn(
+          name: "Mitigation",
+          table: "Findings");
+    }
+  }
 }

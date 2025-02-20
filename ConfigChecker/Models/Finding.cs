@@ -8,7 +8,7 @@ namespace ConfigChecker.Models
     /// The report this finding belongs to.
     /// </summary>
     public string ReportId { get; private set; }
-    
+
     /// <summary>
     /// Name of the resource where the weakness was found.
     /// </summary>

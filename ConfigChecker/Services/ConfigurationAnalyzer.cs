@@ -27,7 +27,7 @@ namespace ConfigChecker.Services
         }
       }
     }
-    
+
     private async ValueTask AnalyzeConfigurationAsync(string reportId, string filePath, CancellationToken cancellation)
     {
       // Write as batch and read individually, can use a standard collection.
@@ -83,7 +83,7 @@ namespace ConfigChecker.Services
     }
 
     private static async IAsyncEnumerable<FindingDto> AnalyzeDatabaseConfigurationAsync(
-      ResourceDto res, 
+      ResourceDto res,
       [EnumeratorCancellation] CancellationToken cancellation)
     {
       while (!cancellation.IsCancellationRequested)
@@ -104,7 +104,7 @@ namespace ConfigChecker.Services
         }
       }
     }
-    
+
     //private static async IAsyncEnumerable<FindingDto> AnalyzeStorageAccountConfigurationAsync(
     //  ResourceDto res,
     //  [EnumeratorCancellation] CancellationToken cancellation)

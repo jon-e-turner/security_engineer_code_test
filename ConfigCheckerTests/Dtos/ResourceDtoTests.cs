@@ -30,13 +30,13 @@ namespace ConfigCheckerTests.Dtos
 
             Assert.AreEqual("database", testResource.Type);
             Assert.AreEqual("db1", testResource.Name);
-            
+
             Assert.IsNotEmpty(testResource.AzureSpecific);
             Assert.HasCount(3, testResource.AzureSpecific);
             Assert.AreEqual("rg2", testResource.AzureSpecific["resource_group"]);
             Assert.AreEqual("westus", testResource.AzureSpecific["location"]);
             Assert.AreEqual("Azure SQL Database", testResource.AzureSpecific["db_service"]);
-            
+
             Assert.IsNotNull(testResource.SecuritySettings);
             Assert.IsNotEmpty(testResource.SecuritySettings);
             Assert.HasCount(4, testResource.SecuritySettings);

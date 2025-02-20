@@ -1,5 +1,4 @@
-﻿using ConfigChecker.Models;
-using static ConfigChecker.Dtos.FindingName;
+﻿using static ConfigChecker.Dtos.FindingName;
 
 namespace ConfigChecker.Dtos
 {

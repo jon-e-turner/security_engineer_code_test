@@ -1,5 +1,4 @@
 using ConfigChecker.Dtos;
-using ConfigChecker.Models;
 using System.Text.Json;
 
 namespace ConfigCheckerTests.Dtos;
