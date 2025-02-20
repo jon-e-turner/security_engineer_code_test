@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ConfigChecker.DTOs
+namespace ConfigChecker.Dtos
 {
   public record ResourceDto
   {

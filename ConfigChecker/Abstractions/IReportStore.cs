@@ -1,4 +1,4 @@
-﻿using ConfigChecker.DTOs;
+﻿using ConfigChecker.Dtos;
 using ConfigChecker.Models;
 
 namespace ConfigChecker.Abstractions

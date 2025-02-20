@@ -1,5 +1,5 @@
 using ConfigChecker.Abstractions;
-using ConfigChecker.DTOs;
+using ConfigChecker.Dtos;
 using ConfigChecker.Endpoints;
 using ConfigChecker.Persistance;
 using ConfigChecker.Services;

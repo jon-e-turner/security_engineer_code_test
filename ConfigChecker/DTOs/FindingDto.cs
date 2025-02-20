@@ -1,4 +1,4 @@
-﻿namespace ConfigChecker.DTOs
+﻿namespace ConfigChecker.Dtos
 {
   public record FindingDto(
     string ResourceName,
