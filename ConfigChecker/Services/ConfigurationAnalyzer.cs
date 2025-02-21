@@ -46,49 +46,34 @@ namespace ConfigChecker.Services
         return;
       }
 
-      // Process the resource records and generate findings.
-      while (!cancellation.IsCancellationRequested)
+      try
       {
-        foreach (var res in resourceRecords)
+        // Process the resource records and generate findings.
+        while (!cancellation.IsCancellationRequested)
         {
-          switch (res.Type)
+          await Parallel.ForEachAsync(resourceRecords, async (res, cancellation) =>
           {
-            //case "virtual_machine":
-            //  await foreach (var finding in AnalyzeVirtualMachineConfigurationAsync(res, cancellation))
-            //  {
-            //    findingRecords.Add(finding);
-            //  }
-            //  break;
-            //case "storage_account":
-            //  await foreach (var finding in AnalyzeStorageAccountConfigurationAsync(res, cancellation))
-            //  {
-            //    findingRecords.Add(finding);
-            //  }
-            //  break;
-            case "database":
-              await foreach (var finding in AnalyzeDatabaseConfigurationAsync(res, cancellation))
-              {
-                findingRecords.Add(finding);
-              }
-              break;
-            default:
-              // Unknown resource type. Log and drop silently.
-              break;
-          }
+            await foreach (var finding in AnalyzeResourceConfigurationAsync(res, cancellation))
+            {
+              findingRecords.Add(finding);
+            }
+          });
         }
       }
-
-      // Persist findings to datastore.
-      await TryPersistToDatastore(reportId, [.. findingRecords], cancellation);
+      finally
+      {
+        // Persist findings to datastore.
+        await TryPersistToDatastore(reportId, [.. findingRecords], cancellation);
+      }
     }
 
-    private static async IAsyncEnumerable<FindingDto> AnalyzeDatabaseConfigurationAsync(
+    private static async IAsyncEnumerable<FindingDto> AnalyzeResourceConfigurationAsync(
       ResourceDto res,
       [EnumeratorCancellation] CancellationToken cancellation)
     {
       while (!cancellation.IsCancellationRequested)
       {
-        if (res is not null && res.Type.Equals("database") && res.SecuritySettings is not null)
+        if (res is not null && res.SecuritySettings is not null)
         {
           if (res.SecuritySettings.TryGetValue(@"open_ports", out var portJson))
           {
@@ -97,39 +82,70 @@ namespace ConfigChecker.Services
               yield return f;
             }
           }
+
           if (res.SecuritySettings.TryGetValue(@"password", out var pwdJson))
           {
+            var finding = await res.GetWeakPasswordFinding(pwdJson);
 
+            if (finding is not null)
+            {
+              yield return finding;
+            }
+
+            yield break;
+          }
+
+          if (res.SecuritySettings.TryGetValue(@"mfa_enabled", out var mfaSetting))
+          {
+            var finding = await res.GetMfaDisabledFinding(mfaSetting);
+
+            if (finding is not null)
+            {
+              yield return finding;
+            }
+
+            yield break;
+          }
+          else if (res.Type.Equals("database") || res.Type.Equals("virtual_machine"))
+          {
+            yield return res.GetMfaDisabledFinding();
+          }
+
+          if (res.SecuritySettings.TryGetValue(@"encryption", out var encryptSetting))
+          {
+            var finding = await res.GetEncryptionDisabledFinding(encryptSetting);
+
+            if (finding is not null)
+            {
+              yield return finding;
+            }
+
+            yield break;
           }
         }
       }
     }
 
-    //private static async IAsyncEnumerable<FindingDto> AnalyzeStorageAccountConfigurationAsync(
-    //  ResourceDto res,
-    //  [EnumeratorCancellation] CancellationToken cancellation)
-    //{
-    //  throw new NotImplementedException();
-    //}
-
-    //private static async IAsyncEnumerable<FindingDto> AnalyzeVirtualMachineConfigurationAsync(
-    //  ResourceDto res,
-    //  [EnumeratorCancellation] CancellationToken cancellation)
-    //{
-    //  throw new NotImplementedException();
-    //}
-
     private async ValueTask TryPersistToDatastore(string reportId, List<FindingDto> findings, CancellationToken cancellation)
     {
       while (!cancellation.IsCancellationRequested)
       {
+        List<Finding> findingEntities = [];
         using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
         IReportStore reportStore = scope.ServiceProvider.GetRequiredService<IReportStore>();
 
-        // To-Do: wrap this in a try block and capture validation errors.
-        List<Finding> findingEntities = [.. findings.Select(f => Finding.Create(reportId, f))];
-
-        await reportStore.AppendToReportAsync(findingEntities);
+        try
+        {
+          findingEntities = [.. findings.Select(f => Finding.Create(reportId, f))];
+        }
+        //catch (AggregateException)
+        //{
+        //  In production, log the errors, then move on.
+        //}
+        finally
+        {
+          await reportStore.AppendToReportAsync(findingEntities);
+        }
       }
     }
   }

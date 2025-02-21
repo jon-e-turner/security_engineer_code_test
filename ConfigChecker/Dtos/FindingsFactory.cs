@@ -10,7 +10,9 @@ namespace ConfigChecker.Dtos
     {
       OpenRcePort => $@"Port {{0}} can be used to remotely administer a host, and should never be exposed to the public.",
       OpenPort => $@"Port {{0}} should not be exposed to the public without reason (e.g. web servers).",
-      WeakPassword => $@"Password set in configuration does not meet minimum requirements.",
+      WeakPassword => @"Password set in configuration does not meet minimum requirements.",
+      MfaDisabled => @"Multi-factor authentication should be enabled on all production systesm.",
+      EncryptionDisabled => @"Encryption-at-rest should be enabled on all systems.",
       _ => string.Empty
     };
 
@@ -47,6 +49,30 @@ namespace ConfigChecker.Dtos
         @"Ensure password meets all requirements for length and complexity.",
         FindingSeverity.Critical,
         "1391"
+        );
+    }
+
+    public static FindingDto CreateMfaDisabledFinding(this ResourceDto resource)
+    {
+      return new FindingDto(
+        resource.Name,
+        MfaDisabled,
+        GetFindingDetails(MfaDisabled),
+        @"Require multi-factor authentication via policy.",
+        FindingSeverity.High,
+        "308"
+        );
+    }
+
+    public static FindingDto CreateEncryptionDisabledFinding(this ResourceDto resource)
+    {
+      return new FindingDto(
+        resource.Name,
+        EncryptionDisabled,
+        GetFindingDetails(EncryptionDisabled),
+        @"Require encryption via policy.",
+        FindingSeverity.High,
+        "312"
         );
     }
   }
