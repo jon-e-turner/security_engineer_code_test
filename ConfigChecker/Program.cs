@@ -30,13 +30,8 @@ namespace ConfigChecker
       });
 
       // Configure JSON Serializer options.
-      builder.Services.Configure<JsonSerializerOptions>(options =>
-      {
-        options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-        options.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;
-        options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower));
-        options.WriteIndented = true;
-      });
+      builder.Services.Configure<JsonSerializerOptions>((options) => 
+        builder.Configuration.Get<JsonSerializerOptions>());
 
       // Use a channel for async communication between app sections.
       builder.Services.AddSingleton(Channel.CreateUnbounded<ProcessingRequestDto>());
