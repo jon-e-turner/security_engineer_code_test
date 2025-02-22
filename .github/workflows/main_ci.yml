@@ -29,11 +29,11 @@ jobs:
       with:
         dotnet-version: 8.0.x
     
-    - name: Restore dependencies
-      run: dotnet restore
+    - name: Restore service dependencies
+      run: dotnet restore ConfigChecker/ConfigChecker.csproj
     
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore ConfigChecker/ConfigChecker.csproj
     
     - name: Run Unit Tests and Generate Coverage
       id: run-tests
