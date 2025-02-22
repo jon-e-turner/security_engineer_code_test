@@ -1,0 +1,52 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Main_CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: 
+      - ConfigChecker/**.*
+      - ConfigCheckerTests/**.*
+  pull_request:
+    branches: [ "main" ]
+    paths: 
+      - ConfigChecker/**.*
+      - ConfigCheckerTests/**.*
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore
+    
+    - name: Run Unit Tests and Generate Coverage
+      id: run-tests
+      uses: alsi-lawr/dotnet-test-coverlet@v1
+      with:
+        project: 'ConfigCheckerTests/ConfigCheckerTests.csproj'  # Specify the correct path to your test project file
+        exclude-files: '**/Migrations/*.cs'  # Example: Exclude migrations files
+        # threshold: 80  # Example: Set coverage threshold to 80%
+        dotnet-version: '8.0'
+
+    - name: Upload Coverage Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: ${{ steps.run-tests.outputs.coverage-report-path }}  # Use the output from the previous step to upload the report
+        retention-days: 30
