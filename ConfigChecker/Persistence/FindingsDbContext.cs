@@ -1,8 +1,8 @@
 ﻿using ConfigChecker.Models;
-using ConfigChecker.Persistance.Configurations;
+using ConfigChecker.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace ConfigChecker.Persistance
+namespace ConfigChecker.Persistence
 {
   public class FindingsDbContext : DbContext
   {

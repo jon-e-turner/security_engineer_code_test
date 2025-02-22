@@ -1,11 +1,10 @@
 using ConfigChecker.Abstractions;
 using ConfigChecker.Dtos;
 using ConfigChecker.Endpoints;
-using ConfigChecker.Persistance;
+using ConfigChecker.Persistence;
 using ConfigChecker.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Channels;
 
 namespace ConfigChecker

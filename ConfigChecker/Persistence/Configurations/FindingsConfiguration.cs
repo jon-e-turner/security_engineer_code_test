@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ConfigChecker.Persistance.Configurations
+namespace ConfigChecker.Persistence.Configurations
 {
   public class FindingsConfiguration : IEntityTypeConfiguration<Finding>
   {

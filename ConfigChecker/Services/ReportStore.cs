@@ -1,7 +1,7 @@
 ﻿using ConfigChecker.Abstractions;
 using ConfigChecker.Dtos;
 using ConfigChecker.Models;
-using ConfigChecker.Persistance;
+using ConfigChecker.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConfigChecker.Services
