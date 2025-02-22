@@ -1,7 +1,6 @@
 # ConfigChecker
 
-![build status]
-(https://github.com/jon-e-turner/security_engineer_code_test/actions/workflows/main_ci.yml/badge.svg)
+![build status](https://github.com/jon-e-turner/security_engineer_code_test/actions/workflows/main_ci.yml/badge.svg)
 
 This applcation started as a response to an interview question, and I have continued to use it to
 hone my understanding of ASP.Net. There are two parts to the application at present, neither of
