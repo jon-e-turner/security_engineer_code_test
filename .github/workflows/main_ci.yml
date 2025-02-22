@@ -34,19 +34,17 @@ jobs:
     
     - name: Build
       run: dotnet build --no-restore ConfigChecker/ConfigChecker.csproj
-    
-    - name: Run Unit Tests and Generate Coverage
-      id: run-tests
-      uses: alsi-lawr/dotnet-test-coverlet@v1
-      with:
-        project: 'ConfigCheckerTests/ConfigCheckerTests.csproj'  # Specify the correct path to your test project file
-        exclude-files: '**/Migrations/*.cs'  # Example: Exclude migrations files
-        # threshold: 80  # Example: Set coverage threshold to 80%
-        dotnet-version: '8.0'
 
+    - name: Test
+      id: tests
+      run: |
+        dotnet tool install --global dotnet-coverage
+        dotnet coverage collect dotnet test ConfigCheckerTests/ConfigCheckerTests.csproj /p:ExcludeByFile='**/Migrations/*.cs' --output-format xml --output ConfigCheckerTests/output.xml
+        echo "coverage-report-path=ConfigCheckerTests/output.xml" >> "$GITHUB_OUTPUT"
+    
     - name: Upload Coverage Report
       uses: actions/upload-artifact@v4
       with:
         name: coverage-report
-        path: ${{ steps.run-tests.outputs.coverage-report-path }}  # Use the output from the previous step to upload the report
+        path: ${{ steps.tests.outputs.coverage-report-path }}  # Use the output from the previous step to upload the report
         retention-days: 30
