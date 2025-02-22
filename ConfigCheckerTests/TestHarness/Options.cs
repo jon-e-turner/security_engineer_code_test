@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace ConfigCheckerTests.TestHarness
 {
-    internal static class SerializerOptions
+    internal static class Options
     {
         private readonly static JsonSerializerOptions _options = new()
         {
@@ -16,6 +16,6 @@ namespace ConfigCheckerTests.TestHarness
                 }
         };
 
-        internal static JsonSerializerOptions GetSerializerOptions() => _options;
+        internal static JsonSerializerOptions SerializerOptions => _options;
     }
 }

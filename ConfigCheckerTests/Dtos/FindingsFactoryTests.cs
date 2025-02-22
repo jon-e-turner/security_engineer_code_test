@@ -22,7 +22,7 @@ public class FindingsFactoryTests
         }
         """
     ,
-    TestHarness.SerializerOptions.GetSerializerOptions());
+    TestHarness.Options.SerializerOptions);
 
     [TestMethod]
     public void CreateExposedPortFindingReturnsFindingDto()
