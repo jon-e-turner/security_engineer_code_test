@@ -1,12 +1,12 @@
 # ConfigChecker
 
-![build status](https://github.com/jon-e-turner/security_engineer_code_test/actions/workflows/main_ci.yml/badge.svg)
-
 This applcation started as a response to an interview question, and I have continued to use it to
 hone my understanding of ASP.Net. There are two parts to the application at present, neither of
 which is fully functional.
 
 ## ConfigChecker (the service)
+
+![build status](https://github.com/jon-e-turner/security_engineer_code_test/actions/workflows/main_ci.yml/badge.svg)
 
 This is the "back-end" of the configuration checking service. It is not a production-quality app
 (again, this was an interview question) and uses a local SqlLite database file to track reports.
