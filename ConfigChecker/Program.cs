@@ -13,11 +13,21 @@ namespace ConfigChecker
   {
     public static void Main(string[] args)
     {
+      var corsPolicyName = "corsPolicy";
+
       var builder = WebApplication.CreateBuilder(args);
 
       // Add services to the container.
       builder.Services.AddAuthorization();
       builder.Services.AddAntiforgery();
+      builder.Services.AddCors(options =>
+      {
+        options.AddPolicy(name: corsPolicyName,
+          policy =>
+          {
+            policy.WithOrigins("http://localhost:3000");
+          });
+      });
 
       // Add persistence via DbContext.
       builder.Services.AddDbContext<FindingsDbContext>(options =>
@@ -50,6 +60,7 @@ namespace ConfigChecker
 
       app.UseAntiforgery();
       app.UseAuthorization();
+      app.UseCors(corsPolicyName);
 
       if (app.Environment.IsDevelopment())
       {
