@@ -2,9 +2,10 @@ extends layout
 
 block append scripts
   script(src='/scripts/FormHelpers.js')
+  script(src='/scripts/DalHealth.js')
   script.
-    // Overload form submit event handler.
     window.onload = function() {
+      // Overload form submit event handler.
       const form = document.querySelector("#uploadForm");
       form.addEventListener("submit", async function(event) {
         event.preventDefault();
@@ -15,11 +16,28 @@ block append scripts
         }
       },
       true);
+
+      // Check DAL status
+      const healthIcon = document.getElementById("healthIcon");
+      healthIcon.addEventListener("click", function(event) {
+        CheckDalHealth("#{dalUri}", "#{healthcheckEndpoint}")
+          .then(res => {
+            healthIcon.innerHTML = res ? '&#x1F7E2;' : '&#x1F7E5;';
+          });
+      },
+      false);
+      healthIcon.click();
     }
 
 block content
   h1= title
   p Welcome to #{title}
+
+block status
+  p 
+  | DAL Status:
+  |
+  span#healthIcon &#x1F7E5;
 
 block upload
   form#uploadForm(method="post")
