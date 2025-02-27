@@ -6,16 +6,21 @@ Built in Javascript using [Node.js](https://nodejs.org/en) and [ExpressJS](https
 
 ## Design Decisions
 
-Ideally, the Node/Express app would handle validation before submitting the file on the user's behalf. In consideration of the import of this part of the project as a whole, I am opting to instead implement the communication with the back-end in client-side Javascript.
+Many of my decisions here are based on how I remember the main web application one of my previous teams maintained. This implementation needs re-worked from scratch.
+
+The Express app handles authenticating the user or establishing a new session based on the user's JWT. It also creates the static web content from Pug templates, filling in configuration values where appropriate. Ideally, the Express app would also validate the uploaded file before submitting it to the API.
+
+I opted instead to implement the communication with the API in client-side JavaScript, which is causing quite a few headaches. Client-side scripts also handle validating the status of the API through the healthcheck endpoint.
 
 ## To-Do
 
-- Add indicator that DAL is online and connected
-- Configure CORS and anti-forgery
+- Move file validation and upload into the Express app
+  - Aim for minimal client-side scripting.
 - Put user's report ids into a signed JWT
   - This provides pseudo-authentication so we can experiment with that in the API
   - Obviously, not very secure. Cookie can't be modified, but it can be stolen/duplicated.
 - Implement report view.
+- Update the app's style.
 
 ## To configure
 
@@ -35,7 +40,7 @@ Ideally, the Node/Express app would handle validation before submitting the file
     11.1.0
     ```
 
-- Launch the application, then use a browser to open the interface. Be default, that is [localhost:3000](http://localhost:3000/).
+- Launch the application, then use a browser to open the interface. By default, that is [localhost:3000](http://localhost:3000/).
 
     ```shell
     > cd security_engineer_code_test/ConfigCheckerSpa
@@ -48,4 +53,4 @@ Ideally, the Node/Express app would handle validation before submitting the file
     GET /scripts/FormHelpers.js 200 15.087 ms - 1025
     ```
 
-- For the application to be able to submit files or read reports, you will also need to start the [ConfigChecker](../ConfigChecker/README.md#to-confgure) service.
+- For the application to be able to submit files or read reports, you will also need to start the [ConfigChecker](../ConfigChecker/README.md#to-configure) service.
