@@ -3,13 +3,14 @@ var cookieParser = require('cookie-parser');
 
 var router = express.Router();
 
-const dalUri = "http://localhost:5262";
-const uploadEndpoint = "upload";
-const reportsEndpoint = "reports";
-const healthcheckEndpoint = "healthcheck";
+const dalUri = app.get('dlaUri');
+const uploadEndpoint = app.get('uploadEndpoint');
+const reportsEndpoint = app.get('reportsEndpoint');
+const healthcheckEndpoint = app.get('healthcheckEndpoint');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+  req.headers['set-cookie'];
   res.render('index', {
     title: 'ConfigChecker',
     reportIds: ['123', '456', '789'],
