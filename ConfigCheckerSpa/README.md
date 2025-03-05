@@ -27,7 +27,7 @@ I opted instead to implement the communication with the API in client-side JavaS
 - Clone the repository to your local machine.
 
     ``` shell
-    > git clone git://github.com/jon-e-turner/security_engineer_code_test 
+    > git clone git://github.com/jon-e-turner/security_engineer_code_test
     > cd security_engineer_code_test/ConfigCheckerSpa
     ```
 

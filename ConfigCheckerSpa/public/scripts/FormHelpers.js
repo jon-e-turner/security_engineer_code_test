@@ -40,4 +40,3 @@ async function SendFormData(formData, resultElement, dalUri, uploadEndpoint) {
     console.error('Error:', error);
   }
 }
-

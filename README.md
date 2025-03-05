@@ -4,6 +4,9 @@ This application started as a response to an interview question, and I have cont
 hone my understanding of ASP.Net. There are two parts to the application at present, neither of
 which is fully functional.
 
+This project uses [pre-commit hooks](https://pre-commit.com), so if you have an interest in
+contributing, please follow the installation and initial configuration at the link above.
+
 ## Web-Queue-Worker
 
 This application has two major parts which encapsulate the long-running task of analyzing a

@@ -6,7 +6,7 @@ namespace ConfigChecker.Utilities
   {
     public static async Task<bool> TryValidateFormFile(this IFormFile formFile, long maxFileSize, string[] allowedFileExtensions)
     {
-      // Check the file length. This check doesn't catch files that only have 
+      // Check the file length. This check doesn't catch files that only have
       // a BOM as their content.
       ArgumentNullException.ThrowIfNull(formFile);
 

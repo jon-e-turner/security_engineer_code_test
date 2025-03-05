@@ -6,12 +6,12 @@ name: Main_CI
 on:
   push:
     branches: [ "main" ]
-    paths: 
+    paths:
       - ConfigChecker/**.*
       - ConfigCheckerTests/**.*
   pull_request:
     branches: [ "main" ]
-    paths: 
+    paths:
       - ConfigChecker/**.*
       - ConfigCheckerTests/**.*
   workflow_dispatch:
@@ -23,15 +23,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    
+
     - name: Restore service dependencies
       run: dotnet restore ConfigChecker/ConfigChecker.csproj
-    
+
     - name: Build
       run: dotnet build --no-restore ConfigChecker/ConfigChecker.csproj
 
@@ -41,7 +41,7 @@ jobs:
         dotnet tool install --global dotnet-coverage
         dotnet coverage collect dotnet test ConfigCheckerTests/ConfigCheckerTests.csproj /p:ExcludeByFile='**/Migrations/*.cs' --output-format xml --output ConfigCheckerTests/output.xml
         echo "coverage-report-path=ConfigCheckerTests/output.xml" >> "$GITHUB_OUTPUT"
-    
+
     - name: Upload Coverage Report
       uses: actions/upload-artifact@v4
       with:

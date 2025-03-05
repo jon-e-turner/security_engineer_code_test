@@ -16,10 +16,10 @@ namespace ConfigChecker.Endpoints
       _ = endpointRouteBuilder.MapGet("/healthcheck", () =>
             TypedResults.NoContent());
 
-      _ = endpointRouteBuilder.MapPost("/upload", 
+      _ = endpointRouteBuilder.MapPost("/upload",
         async Task<Results<Accepted, BadRequest<string>, BadRequest>> (
-          [FromForm] IFormFile file, 
-          [FromServices] IFileUploadService uploadService, 
+          [FromForm] IFormFile file,
+          [FromServices] IFileUploadService uploadService,
           [FromServices] ChannelWriter<ProcessingRequestDto> processingChannel) =>
       {
         string path = string.Empty;
@@ -44,9 +44,9 @@ namespace ConfigChecker.Endpoints
         return TypedResults.BadRequest();
       });
 
-      _ = endpointRouteBuilder.MapGet("/reports/{reportId}", 
+      _ = endpointRouteBuilder.MapGet("/reports/{reportId}",
         async Task<Results<Ok<List<FindingDto>>, NoContent, BadRequest<string>>> (
-          [FromRoute] string reportId, 
+          [FromRoute] string reportId,
           [FromServices] IReportStore reportStore) =>
       {
         // Validate the provided ID is a GUID.

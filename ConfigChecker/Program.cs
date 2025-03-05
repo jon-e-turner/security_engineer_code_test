@@ -39,7 +39,7 @@ namespace ConfigChecker
       });
 
       // Configure JSON Serializer options.
-      builder.Services.Configure<JsonSerializerOptions>((options) => 
+      builder.Services.Configure<JsonSerializerOptions>((options) =>
         builder.Configuration.Get<JsonSerializerOptions>());
 
       // Use a channel for async communication between app sections.
