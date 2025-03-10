@@ -7,6 +7,9 @@ var router = express.Router();
 
 const dalUri = app.get('dlaUri');
 const uploadEndpoint = app.get('uploadEndpoint');
+const cookieSecret = app.get('cookieSecret');
+
+router.use(cookieParser(cookieSecret));
 
 function ValidateFormData(formData) {
   var isValid = false;
@@ -51,7 +54,6 @@ async function SendFormData(formData, resultElement, dalUri, uploadEndpoint) {
   }
 }
 
-/* POST form data. */
 router.route('/upload')
   .get(function (req, res, next) {
     // display the form
