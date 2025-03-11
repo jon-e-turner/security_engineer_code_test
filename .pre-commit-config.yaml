@@ -1,4 +1,4 @@
-exclude: ^/Migrations/$
+exclude: ^.*\bMigrations\b
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -16,3 +16,13 @@ repos:
     rev: v0.44.0
     hooks:
       - id: markdownlint
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.22.0
+    hooks:
+      - id: eslint
+        exclude: ^.*\b(node_modules|bin|obj)
+        args: ["-c /ConfigCheckerSpa/eslint.config.mjs"]
+        additional_dependencies:
+          - "@eslint/js@9.22.0"
+          - "@stylistic/eslint-plugin-js@4.2.0"
+          - globals@16.0.0
