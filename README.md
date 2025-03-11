@@ -27,6 +27,8 @@ instructions are in the app's [README](./ConfigChecker/README.md#to-configure).
 
 ### ConfigCheckerSpa (the UI)
 
+![build status](https://github.com/jon-e-turner/security_engineer_code_test/actions/workflows/spa_ci.yml/badge.svg)
+
 This JavaScript SPA is the front-end of the configuration checking service. It includes a status
 light to indicate the back-end's status, a form to upload a new configuration file for processing,
 and an area to display links to the completed reports. The site is designed to work with anonymous

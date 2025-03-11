@@ -1,0 +1,32 @@
+# Builds the SPA project and ensures it passes esLint rules.
+# Add a test step when they're in the project.
+
+name: SPA_CI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ConfigCheckerSpa/**/*.js
+  pull_request:
+    branches: ["main"]
+    paths:
+      - ConfigCheckerSpa/**/*.js
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --include prod --include dev --no-audit --no-fund
+
+      - run: npm run lint
