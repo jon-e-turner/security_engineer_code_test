@@ -9,11 +9,11 @@ export default [
     languageOptions: {
       sourceType: "commonjs"
     },
-    ignores: [".vscode/"],
+    ignores: [".vscode/", "bin/", "obj/"],
     plugins: { "@stylistic/js": stylisticJs }
   },
   {
-    languageOptions: { globals: globals.browser }
+    languageOptions: { globals: globals.node }
   },
   pluginJs.configs.recommended,
   stylisticJs.configs["disable-legacy"],

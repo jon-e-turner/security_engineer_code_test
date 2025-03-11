@@ -1,15 +1,10 @@
 var express = require('express');
-var cookieParser = require('cookie-parser');
-const app = require('../app');
+//var cookieParser = require('cookie-parser');
 const createError = require('http-errors');
 
 var router = express.Router();
 
-const dalUri = app.get('dlaUri');
-const uploadEndpoint = app.get('uploadEndpoint');
-const cookieSecret = app.get('cookieSecret');
-
-router.use(cookieParser(cookieSecret));
+//router.use(cookieParser(cookieSecret));
 
 function ValidateFormData(formData) {
   var isValid = false;
@@ -23,7 +18,7 @@ function ValidateFormData(formData) {
   return isValid;
 }
 
-async function SendFormData(formData, resultElement, dalUri, uploadEndpoint) {
+async function SendFormData(formData, dalUri, uploadEndpoint) {
   try {
     const response = await fetch(`${dalUri}/${uploadEndpoint}`, {
       method: 'POST',
@@ -34,20 +29,16 @@ async function SendFormData(formData, resultElement, dalUri, uploadEndpoint) {
       const reportId = await response.text();
 
       if (reportId.length > 0) {
-        resultElement.value = `New report id: ${reportId}`;
+        return reportId;
       }
       else {
         console.log(await response.json());
-
-        resultElement.value = "Whoops! Shouldn't be here."
       }
     }
     else {
       console.log(await response.json());
       console.log(`dalUri: ${dalUri}`);
       console.log(`uploadEndpoint: ${uploadEndpoint}`);
-
-      resultElement.value = 'Error in submission.';
     }
   } catch (error) {
     console.error('Error:', error);
@@ -55,16 +46,31 @@ async function SendFormData(formData, resultElement, dalUri, uploadEndpoint) {
 }
 
 router.route('/upload')
-  .get(function (req, res, next) {
-    // display the form
+  .get(function (req, res) {
+    res.redirect('/index');
   })
   .post(async function (req, res, next) {
+    const app = req.app;
+
+    const dalUri = app.get('dalUri');
+    const uploadEndpoint = app.get('uploadEndpoint');
+
+
     // Extract the file from the request, do a first-pass validation,
     // then forward it on to the DAL for processing.
     if (!req.is(['multipart/form-data', 'application/x-www-form-urlencoded']))
       return next(createError(406));
 
-    const formData = req.body();
+    const formData = new FormData(req.body());
+    const resultElement = formData.elements.namedItem("result");
+
+    if (ValidateFormData(formData)) {
+      const response = await SendFormData(formData, resultElement, dalUri, uploadEndpoint);
+
+      if (response && response.length > 0) {
+        res.redirect(`/index?id=${response}`)
+      }
+    }
   });
 
 module.exports = router;

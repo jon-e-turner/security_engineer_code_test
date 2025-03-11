@@ -1,22 +1,9 @@
 extends layout
 
 block append scripts
-  script(src='/scripts/FormHelpers.js')
   script(src='/scripts/DalHealth.js')
   script.
     window.onload = function() {
-      // Overload form submit event handler.
-      const form = document.querySelector("#uploadForm");
-      form.addEventListener("submit", async function(event) {
-        event.preventDefault();
-        const formData = new FormData(form);
-        const resultElement = form.elements.namedItem("result");
-        if (ValidateFormData(formData)) {
-          await SendFormData(formData, resultElement, "#{dalUri}", "#{uploadEndpoint}");
-        }
-      },
-      true);
-
       // Check DAL status
       const healthIcon = document.getElementById("healthIcon");
       healthIcon.addEventListener("click", function(event) {
@@ -37,10 +24,10 @@ block status
   p
   | DAL Status:
   |
-  span#healthIcon &#x1F7E5;
+  span#healthIcon &#x1F7E2;
 
 block upload
-  form#uploadForm(method="post")
+  form#uploadForm(method="post", action="upload/")
     fieldset
       p
         label(for="file") File:
@@ -50,7 +37,7 @@ block upload
         input(type="submit", value="Upload")
 
       p
-        output(name="result")
+        output(name="result", value=#{reportId})
 
 block reports
 //-   if reportIds.length

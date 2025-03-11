@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+// File is included via PUG, then used client-side.
 function CheckDalHealth(dalUri, endpoint) {
   try {
     return fetch(`${dalUri}/${endpoint}`)
