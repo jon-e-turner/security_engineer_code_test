@@ -17,8 +17,7 @@ namespace ConfigChecker.Services
 
     protected override async Task ExecuteAsync(CancellationToken cancellation)
     {
-      while (_channelReader is not null
-             && !_channelReader.Completion.IsCompleted
+      while (!_channelReader.Completion.IsCompleted
              && await _channelReader.WaitToReadAsync(cancellation))
       {
         if (_channelReader.TryRead(out var request))

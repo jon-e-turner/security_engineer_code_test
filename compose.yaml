@@ -1,0 +1,13 @@
+﻿services:
+  configcheckerblazor:
+    image: configcheckerblazor
+    build:
+      context: .
+      dockerfile: ConfigCheckerBlazor/ConfigCheckerBlazor/Dockerfile
+
+  configcheckerblazor.client:
+    image: configcheckerblazor.client
+    build:
+      context: .
+      dockerfile: ConfigCheckerBlazor/ConfigCheckerBlazor.Client/Dockerfile
+
