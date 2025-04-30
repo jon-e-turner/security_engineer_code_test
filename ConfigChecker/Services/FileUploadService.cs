@@ -1,26 +1,27 @@
 ﻿using ConfigChecker.Abstractions;
 using ConfigChecker.Utilities;
+
 using Microsoft.Extensions.Options;
 
 namespace ConfigChecker.Services
 {
-  public class FileUploadService(IOptions<FileUploadServiceOptions> options) : IFileUploadService
-  {
-    private readonly long _maxFileSize = options.Value.MaxFileSize;
-    private readonly string[] _allowedExtensions = options.Value.AllowedExtensions;
-
-    public async ValueTask<string> ReadFormFileAsync(IFormFile formFile)
+    public class FileUploadService(IOptions<FileUploadServiceOptions> options) : IFileUploadService
     {
-      if (!await formFile.TryValidateFormFile(_maxFileSize, _allowedExtensions))
-      {
-        return string.Empty;
-      }
+        private readonly string[ ] _allowedExtensions = options.Value.AllowedExtensions;
+        private readonly long _maxFileSize = options.Value.MaxFileSize;
 
-      var safePath = Path.GetTempFileName();
-      using var stream = File.Create(safePath);
-      await formFile.CopyToAsync(stream);
+        public async ValueTask<string> ReadFormFileAsync(IFormFile formFile)
+        {
+            if (!await formFile.TryValidateFormFile(_maxFileSize, _allowedExtensions))
+            {
+                return string.Empty;
+            }
 
-      return safePath;
+            var safePath = Path.GetTempFileName( );
+            using var stream = File.Create(safePath);
+            await formFile.CopyToAsync(stream);
+
+            return safePath;
+        }
     }
-  }
 }

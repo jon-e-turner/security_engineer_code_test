@@ -7,21 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\z4ns4\source\security_engineer_code_test\ConfigChecker\.editorconfig" />
+    <EditorConfigFiles Remove="C:\Users\z4ns4\source\security_engineer_code_test\ConfigChecker\.editorconfig"/>
+    <EditorConfigFiles Remove=".editorconfig"/>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="C:\Users\z4ns4\source\security_engineer_code_test\ConfigChecker\.editorconfig" />
+    <None Include="C:\Users\z4ns4\source\security_engineer_code_test\ConfigChecker\.editorconfig"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
-    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1"/>
+    <PackageReference Include="System.Threading.Tasks" Version="4.3.0"/>
   </ItemGroup>
 
 </Project>

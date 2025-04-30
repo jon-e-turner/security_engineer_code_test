@@ -3,12 +3,12 @@ using ConfigChecker.Models;
 
 namespace ConfigChecker.Abstractions
 {
-  internal interface IReportStore
-  {
-    public IAsyncEnumerable<FindingDto> GetReportAsync(string reportId);
+    internal interface IReportStore
+    {
+        public IAsyncEnumerable<FindingDto> GetReportAsync(string reportId);
 
-    public ValueTask AppendToReportAsync(List<Finding> findings);
+        public ValueTask AppendToReportAsync(List<Finding> findings);
 
-    public ValueTask DeleteReportAsync(string reportId);
-  }
+        public ValueTask DeleteReportAsync(string reportId);
+    }
 }

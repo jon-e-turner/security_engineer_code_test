@@ -33,7 +33,8 @@ tasks to asynchronously analyze them in parallel. Results are collected and pass
 persistence service for storage. This is the "worker" portion of the application.
 
 Persistence in this application is handled by a local SqlLite file. If deploying such a service
-into production, it is best suited to a document-based system like Azure's [CosmosDb](https://learn.microsoft.com/en-us/azure/cosmos-db/).
+into production, it is best suited to a document-based system like
+Azure's [CosmosDb](https://learn.microsoft.com/en-us/azure/cosmos-db/).
 
 Entity-type relationships are configured using the IEntityTypeConfiguration interface to ensure
 the domains remain clean and decoupled from the persistence implementation.
@@ -64,7 +65,7 @@ directory entity (user, group, etc.) which owns the record.
     ```
 
 - Ensure you have `dotnet-ef` tools at version 9.0.1 or higher, then run the database migration to create
- the initial file.
+  the initial file.
 
     ``` shell
     > dotnet tool list --global dotnet-ef

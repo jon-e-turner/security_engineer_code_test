@@ -1,4 +1,4 @@
 ﻿namespace ConfigChecker.Dtos
 {
-  public record ProcessingRequestDto(string Path, string ReportId);
+    public record ProcessingRequestDto(string Path, string ReportId);
 }
