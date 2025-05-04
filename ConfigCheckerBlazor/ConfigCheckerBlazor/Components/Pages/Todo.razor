@@ -1,0 +1,31 @@
+@page "/todo"
+@rendermode InteractiveServer
+
+<h3>Todo</h3>
+
+<ul>
+  @foreach (var todo in _todos)
+  {
+    <li>@todo.Title</li>
+  }
+</ul>
+
+<input @bind="_newTodo"/>
+<button @onclick="AddTodo">Add todo</button>
+
+
+
+@code {
+  private List<TodoItem> _todos = [];
+  string _newTodo = string.Empty;
+
+  void AddTodo()
+  {
+    if (!string.IsNullOrWhiteSpace(_newTodo))
+    {
+      _todos.Add(new TodoItem { Title = _newTodo });
+      _newTodo = string.Empty;
+    }
+  }
+
+}
