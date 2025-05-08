@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="compose.yaml" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="./ConfigChecker/ConfigChecker.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="./ConfigCheckerSpa/ConfigCheckerSpa.esproj">
+    <BuildDependency Project="./ConfigChecker/ConfigChecker.csproj" />
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="./ConfigCheckerTests/ConfigCheckerTests.csproj" />
+  <Project Path="ConfigCheckerBlazor/ConfigCheckerBlazor.Client/ConfigCheckerBlazor.Client.csproj" />
+  <Project Path="ConfigCheckerBlazor/ConfigCheckerBlazor/ConfigCheckerBlazor.csproj" />
+</Solution>
