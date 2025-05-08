@@ -1,31 +1,37 @@
 @page "/todo"
+@using ConfigCheckerBlazor.Models
 @rendermode InteractiveServer
 
-<h3>Todo</h3>
+<h3>Todo (@_todos.Count(todo => !todo.IsDone))</h3>
 
 <ul>
   @foreach (var todo in _todos)
   {
-    <li>@todo.Title</li>
+    <li>
+      <input type = "checkbox" @bind = "todo.IsDone" />
+      <input @bind = "todo.Title" />
+    </li>
   }
 </ul>
 
-<input @bind="_newTodo"/>
-<button @onclick="AddTodo">Add todo</button>
+<input @bind = "_newTodo" />
+<button @onclick = "AddTodo">Add todo</button>
 
 
 
 @code {
-  private List<TodoItem> _todos = [];
+  private readonly List<TodoItem> _todos = [];
   string _newTodo = string.Empty;
 
   void AddTodo()
   {
-    if (!string.IsNullOrWhiteSpace(_newTodo))
+    if (string.IsNullOrWhiteSpace(_newTodo))
     {
-      _todos.Add(new TodoItem { Title = _newTodo });
-      _newTodo = string.Empty;
+      return;
     }
+
+    _todos.Add(new TodoItem { Title = _newTodo });
+    _newTodo = string.Empty;
   }
 
 }

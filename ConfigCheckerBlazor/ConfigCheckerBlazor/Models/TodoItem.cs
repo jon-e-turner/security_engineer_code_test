@@ -1,4 +1,4 @@
-namespace ConfigCheckerBlazor
+namespace ConfigCheckerBlazor.Models
 {
     public class TodoItem
     {
@@ -12,6 +12,6 @@ namespace ConfigCheckerBlazor
         {
             get;
             set;
-        } = false;
+        }
     }
 }
