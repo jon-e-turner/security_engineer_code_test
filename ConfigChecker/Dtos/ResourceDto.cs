@@ -8,27 +8,27 @@ namespace ConfigChecker.Dtos
         public required string Type
         {
             get;
-            set;
+            init;
         }
 
         public required string Name
         {
             get;
-            set;
+            init;
         }
 
-        [JsonPropertyName("azure_specific")]
+        [ JsonPropertyName("azure_specific") ]
         public required IDictionary<string, string> AzureSpecific
         {
             get;
-            set;
+            init;
         }
 
-        [JsonExtensionData]
+        [ JsonExtensionData ]
         public IDictionary<string, JsonElement>? SecuritySettings
         {
             get;
-            set;
+            init;
         }
     }
 }
