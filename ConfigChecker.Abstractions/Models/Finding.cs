@@ -1,10 +1,10 @@
-﻿using ConfigChecker.Dtos;
+﻿using ConfigChecker.Abstractions.Dtos;
 
-namespace ConfigChecker.Models
+namespace ConfigChecker.Abstractions.Models
 {
     public sealed class Finding : EntityBase
     {
-        private Finding( )
+        private Finding()
         {
             ReportId = string.Empty;
             ResourceName = string.Empty;
@@ -132,7 +132,7 @@ namespace ConfigChecker.Models
         private static void ValidateInputs(string reportId, string resourceName, FindingName name, string description,
             string mitigation, FindingSeverity severity, string cweId)
         {
-            List<Exception> exceptions = [];
+            List<Exception> exceptions = [ ];
 
             if (string.IsNullOrEmpty(reportId) || !Guid.TryParse(reportId, out _))
             {

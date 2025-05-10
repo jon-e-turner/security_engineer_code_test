@@ -1,6 +1,6 @@
 ﻿using ConfigChecker.Abstractions;
-using ConfigChecker.Dtos;
-using ConfigChecker.Models;
+using ConfigChecker.Abstractions.Dtos;
+using ConfigChecker.Abstractions.Models;
 using ConfigChecker.Persistence;
 
 using Microsoft.EntityFrameworkCore;
@@ -19,19 +19,19 @@ namespace ConfigChecker.Services
         public async ValueTask AppendToReportAsync(List<Finding> findings)
         {
             await _dbContext.AddRangeAsync(findings);
-            await _dbContext.SaveChangesAsync( );
+            await _dbContext.SaveChangesAsync();
         }
 
         public async ValueTask DeleteReportAsync(string reportId)
         {
             var findingsToDelete = await _dbContext.Findings
                 .Where(f => f.ReportId.Equals(reportId, StringComparison.InvariantCultureIgnoreCase))
-                .ToListAsync( );
+                .ToListAsync();
 
             if (findingsToDelete.Count > 0)
             {
                 _dbContext.RemoveRange(findingsToDelete);
-                await _dbContext.SaveChangesAsync( );
+                await _dbContext.SaveChangesAsync();
             }
         }
 
@@ -39,7 +39,7 @@ namespace ConfigChecker.Services
         {
             var findings = _dbContext.Findings
                 .Where(f => f.ReportId.Equals(reportId, StringComparison.InvariantCultureIgnoreCase))
-                .AsAsyncEnumerable( );
+                .AsAsyncEnumerable();
 
             await foreach (var f in findings)
             {

@@ -1,4 +1,4 @@
-﻿namespace ConfigChecker.Dtos
+﻿namespace ConfigChecker.Abstractions.Dtos
 {
     public enum FindingName
     {

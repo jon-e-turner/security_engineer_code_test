@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-using ConfigChecker.Dtos;
+using ConfigChecker.Abstractions.Dtos;
 
 namespace ConfigChecker.Utilities
 {
@@ -12,7 +12,7 @@ namespace ConfigChecker.Utilities
             {
                 if (await Task.Run(mfaSetting.GetBoolean))
                 {
-                    return res.CreateMfaDisabledFinding( );
+                    return res.CreateMfaDisabledFinding();
                 }
             }
             catch (Exception ex) when
@@ -26,7 +26,7 @@ namespace ConfigChecker.Utilities
 
         public static FindingDto GetMfaDisabledFinding(this ResourceDto res)
         {
-            return res.CreateMfaDisabledFinding( );
+            return res.CreateMfaDisabledFinding();
         }
 
         public static async Task<FindingDto?> GetEncryptionDisabledFinding(this ResourceDto res,
@@ -36,7 +36,7 @@ namespace ConfigChecker.Utilities
             {
                 if (await Task.Run(encryptSetting.GetBoolean))
                 {
-                    return res.CreateEncryptionDisabledFinding( );
+                    return res.CreateEncryptionDisabledFinding();
                 }
             }
             catch (Exception ex) when
@@ -52,12 +52,12 @@ namespace ConfigChecker.Utilities
         {
             try
             {
-                var password = await Task.Run(( ) => pwdJson.Deserialize<string>( ) ?? string.Empty);
+                var password = await Task.Run(() => pwdJson.Deserialize<string>() ?? string.Empty);
 
                 // Use a real algorithm in production, obvs.
                 if (string.IsNullOrEmpty(password) || password.Contains("weak"))
                 {
-                    return res.CreateWeakPasswordFinding( );
+                    return res.CreateWeakPasswordFinding();
                 }
             }
             catch (Exception ex) when
@@ -75,7 +75,7 @@ namespace ConfigChecker.Utilities
 
             try
             {
-                ports = await Task.Run(( ) => portJson.Deserialize<int[ ]>( ) ?? []);
+                ports = await Task.Run(() => portJson.Deserialize<int[ ]>() ?? [ ]);
             }
             catch (Exception ex) when
                 (ex is JsonException || ex is NotSupportedException)
@@ -93,7 +93,7 @@ namespace ConfigChecker.Utilities
         private static IEnumerable<FindingDto> GetOpenPortFindings(this ResourceDto res, int[ ] ports,
             int[ ]? allowedPorts = null)
         {
-            var portsToCheck = ports.Except(allowedPorts ?? []);
+            var portsToCheck = ports.Except(allowedPorts ?? [ ]);
 
             foreach (var port in portsToCheck)
             {

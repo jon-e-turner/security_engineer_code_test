@@ -4,8 +4,8 @@ using System.Text.Json;
 using System.Threading.Channels;
 
 using ConfigChecker.Abstractions;
-using ConfigChecker.Dtos;
-using ConfigChecker.Models;
+using ConfigChecker.Abstractions.Dtos;
+using ConfigChecker.Abstractions.Models;
 using ConfigChecker.Utilities;
 
 namespace ConfigChecker.Services
@@ -32,16 +32,16 @@ namespace ConfigChecker.Services
             CancellationToken cancellation)
         {
             // Write as batch and read individually, can use a standard collection.
-            List<ResourceDto> resourceRecords = [];
+            List<ResourceDto> resourceRecords = [ ];
 
             // Write concurrently from many threads, so need to use a thread-safe collection.
-            ConcurrentBag<FindingDto> findingRecords = [];
+            ConcurrentBag<FindingDto> findingRecords = [ ];
 
             using (var fileStream = File.OpenRead(filePath))
             {
                 resourceRecords =
                     await JsonSerializer.DeserializeAsync<List<ResourceDto>>(fileStream,
-                        cancellationToken: cancellation) ?? [];
+                        cancellationToken: cancellation) ?? [ ];
             }
 
             if (resourceRecords.Count == 0)
@@ -66,13 +66,13 @@ namespace ConfigChecker.Services
             finally
             {
                 // Persist findings to datastore.
-                await TryPersistToDatastore(reportId, [.. findingRecords], cancellation);
+                await TryPersistToDatastore(reportId, [ .. findingRecords ], cancellation);
             }
         }
 
         private static async IAsyncEnumerable<FindingDto> AnalyzeResourceConfigurationAsync(
             ResourceDto res,
-            [EnumeratorCancellation] CancellationToken cancellation)
+            [ EnumeratorCancellation ] CancellationToken cancellation)
         {
             while (!cancellation.IsCancellationRequested)
             {
@@ -112,7 +112,7 @@ namespace ConfigChecker.Services
 
                     if (res.Type.Equals("database") || res.Type.Equals("virtual_machine"))
                     {
-                        yield return res.GetMfaDisabledFinding( );
+                        yield return res.GetMfaDisabledFinding();
                     }
 
                     if (res.SecuritySettings.TryGetValue(@"encryption", out var encryptSetting))
@@ -135,13 +135,13 @@ namespace ConfigChecker.Services
         {
             while (!cancellation.IsCancellationRequested)
             {
-                List<Finding> findingEntities = [];
-                using var scope = scopeFactory.CreateAsyncScope( );
-                var reportStore = scope.ServiceProvider.GetRequiredService<IReportStore>( );
+                List<Finding> findingEntities = [ ];
+                using var scope = scopeFactory.CreateAsyncScope();
+                var reportStore = scope.ServiceProvider.GetRequiredService<IReportStore>();
 
                 try
                 {
-                    findingEntities = [.. findings.Select(f => Finding.Create(reportId, f))];
+                    findingEntities = [ .. findings.Select(f => Finding.Create(reportId, f)) ];
                 }
                 //catch (AggregateException)
                 //{

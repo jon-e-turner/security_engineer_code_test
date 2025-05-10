@@ -1,4 +1,4 @@
-﻿namespace ConfigChecker.Models
+﻿namespace ConfigChecker.Abstractions.Models
 {
     public abstract class EntityBase
     {
@@ -6,7 +6,7 @@
         {
             get;
             private init;
-        } = Guid.NewGuid( );
+        } = Guid.NewGuid();
 
         public DateTimeOffset Created
         {
@@ -20,7 +20,7 @@
             private set;
         } = DateTimeOffset.UtcNow;
 
-        public void UpdateLastModified( )
+        public void UpdateLastModified()
         {
             LastModified = DateTimeOffset.UtcNow;
         }

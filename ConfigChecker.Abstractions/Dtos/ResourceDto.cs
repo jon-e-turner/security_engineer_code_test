@@ -1,7 +1,7 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ConfigCheckerBlazor.Models
+namespace ConfigChecker.Abstractions.Dtos
 {
     public record ResourceDto
     {

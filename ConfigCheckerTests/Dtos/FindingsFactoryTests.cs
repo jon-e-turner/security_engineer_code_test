@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-using ConfigChecker.Dtos;
+using ConfigChecker.Abstractions.Dtos;
 
 using ConfigCheckerTests.TestHarness;
 

@@ -1,6 +1,6 @@
-namespace ConfigCheckerBlazor.Models
+﻿namespace ConfigChecker.Abstractions.Dtos
 {
-    public abstract record FindingDto(
+    public record FindingDto(
         string ResourceName,
         FindingName Name,
         string Description,

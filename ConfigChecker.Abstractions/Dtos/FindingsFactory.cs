@@ -1,6 +1,6 @@
-﻿using static ConfigChecker.Dtos.FindingName;
+﻿using static ConfigChecker.Abstractions.Dtos.FindingName;
 
-namespace ConfigChecker.Dtos
+namespace ConfigChecker.Abstractions.Dtos
 {
     public static class FindingsFactory
     {

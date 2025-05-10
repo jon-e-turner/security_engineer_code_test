@@ -1,4 +1,4 @@
-﻿using ConfigChecker.Models;
+﻿using ConfigChecker.Abstractions.Models;
 using ConfigChecker.Persistence.Configurations;
 
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +11,12 @@ namespace ConfigChecker.Persistence
         {
         }
 
-        public DbSet<Finding> Findings => Set<Finding>( );
+        public DbSet<Finding> Findings => Set<Finding>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Using IEntityTypeConfiguration<T> to de-couple model from database entity.
-            modelBuilder.ApplyConfiguration(new FindingsConfiguration( ));
+            modelBuilder.ApplyConfiguration(new FindingsConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

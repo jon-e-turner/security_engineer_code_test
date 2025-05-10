@@ -1,4 +1,6 @@
-﻿namespace ConfigChecker.Abstractions
+﻿using Microsoft.AspNetCore.Http;
+
+namespace ConfigChecker.Abstractions
 {
     public interface IFileUploadService
     {
