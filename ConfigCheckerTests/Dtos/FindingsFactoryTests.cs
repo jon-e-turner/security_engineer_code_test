@@ -9,7 +9,7 @@ namespace ConfigCheckerTests.Dtos
     [ TestClass ]
     public class FindingsFactoryTests
     {
-        private readonly ResourceDto? testResource = JsonSerializer.Deserialize<ResourceDto>("""
+        private readonly ResourceDto? _testResource = JsonSerializer.Deserialize<ResourceDto>("""
                 {
                   "type": "database",
                   "name": "db1",
@@ -30,12 +30,12 @@ namespace ConfigCheckerTests.Dtos
         [ TestMethod ]
         public void CreateExposedPortFindingReturnsFindingDto()
         {
-            if (testResource is not null)
+            if (_testResource is not null)
             {
-                var finding = testResource.CreateExposedPortFinding(80);
+                var finding = _testResource.CreateExposedPortFinding(80);
 
                 Assert.IsNotNull(finding);
-                Assert.AreEqual(testResource.Name, finding.ResourceName);
+                Assert.AreEqual(_testResource.Name, finding.ResourceName);
                 Assert.AreEqual(FindingName.OpenPort, finding.Name);
                 Assert.Contains("Port 80 ", finding.Description);
                 Assert.Contains(" network groups ", finding.Mitigation);
@@ -51,12 +51,12 @@ namespace ConfigCheckerTests.Dtos
         [ TestMethod ]
         public void CreateExposedRcePortFindingReturnsFindingDto()
         {
-            if (testResource is not null)
+            if (_testResource is not null)
             {
-                var finding = testResource.CreateExposedRcePortFinding(22);
+                var finding = _testResource.CreateExposedRcePortFinding(22);
 
                 Assert.IsNotNull(finding);
-                Assert.AreEqual(testResource.Name, finding.ResourceName);
+                Assert.AreEqual(_testResource.Name, finding.ResourceName);
                 Assert.AreEqual(FindingName.OpenRcePort, finding.Name);
                 Assert.Contains("Port 22 ", finding.Description);
                 Assert.Contains(" network groups ", finding.Mitigation);
@@ -72,12 +72,12 @@ namespace ConfigCheckerTests.Dtos
         [ TestMethod ]
         public void CreateWeakPasswordFindingReturnsFindingDto()
         {
-            if (testResource is not null)
+            if (_testResource is not null)
             {
-                var finding = testResource.CreateWeakPasswordFinding();
+                var finding = _testResource.CreateWeakPasswordFinding();
 
                 Assert.IsNotNull(finding);
-                Assert.AreEqual(testResource.Name, finding.ResourceName);
+                Assert.AreEqual(_testResource.Name, finding.ResourceName);
                 Assert.AreEqual(FindingName.WeakPassword, finding.Name);
                 Assert.Contains(" minimum requirements.", finding.Description);
                 Assert.Contains(" length and complexity.", finding.Mitigation);
@@ -93,12 +93,12 @@ namespace ConfigCheckerTests.Dtos
         [ TestMethod ]
         public void CreateMfaDisabledFindingReturnsFindingDto()
         {
-            if (testResource is not null)
+            if (_testResource is not null)
             {
-                var finding = testResource.CreateMfaDisabledFinding();
+                var finding = _testResource.CreateMfaDisabledFinding();
 
                 Assert.IsNotNull(finding);
-                Assert.AreEqual(testResource.Name, finding.ResourceName);
+                Assert.AreEqual(_testResource.Name, finding.ResourceName);
                 Assert.AreEqual(FindingName.MfaDisabled, finding.Name);
                 Assert.Contains("Multi-factor authentication ", finding.Description);
                 Assert.Contains("Require multi-factor ", finding.Mitigation);
@@ -114,12 +114,12 @@ namespace ConfigCheckerTests.Dtos
         [ TestMethod ]
         public void CreateEncryptionDisabledFindingReturnsFindingDto()
         {
-            if (testResource is not null)
+            if (_testResource is not null)
             {
-                var finding = testResource.CreateEncryptionDisabledFinding();
+                var finding = _testResource.CreateEncryptionDisabledFinding();
 
                 Assert.IsNotNull(finding);
-                Assert.AreEqual(testResource.Name, finding.ResourceName);
+                Assert.AreEqual(_testResource.Name, finding.ResourceName);
                 Assert.AreEqual(FindingName.EncryptionDisabled, finding.Name);
                 Assert.Contains("Encryption-at-rest ", finding.Description);
                 Assert.Contains("Require encryption ", finding.Mitigation);

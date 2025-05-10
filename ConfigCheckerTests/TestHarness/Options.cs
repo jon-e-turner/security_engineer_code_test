@@ -5,17 +5,15 @@ namespace ConfigCheckerTests.TestHarness
 {
     internal static class Options
     {
-        private readonly static JsonSerializerOptions _options = new()
+        internal static JsonSerializerOptions SerializerOptions
+        {
+            get;
+        } = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower,
             WriteIndented = true,
-            Converters =
-                {
-                    new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower)
-                }
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower) }
         };
-
-        internal static JsonSerializerOptions SerializerOptions => _options;
     }
 }
